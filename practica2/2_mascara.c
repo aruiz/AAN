@@ -110,9 +110,9 @@ main (int argc, char **argv)
 	fgreen1 = uchar_to_float (green1, w * h);
 	fblue1  = uchar_to_float (blue1,  w * h);
 	
-	fred1 = (float*) malloc (sizeof (float) * w * h);
-	fgreen1 = (float*) malloc (sizeof (float) * w * h);
-	fblue1 = (float*) malloc (sizeof (float) * w * h);
+	fred2   = (float*) malloc (sizeof (float) * w * h);
+	fgreen2 = (float*) malloc (sizeof (float) * w * h);
+	fblue2  = (float*) malloc (sizeof (float) * w * h);
 		
 	aan_mascara_imagen (fred1, fgreen1, fblue1,
 	                    fred2, fgreen2, fblue2,
@@ -122,7 +122,17 @@ main (int argc, char **argv)
 	green2 = float_to_uchar (fgreen2, w * h);
 	blue2  = float_to_uchar (fblue2,  w * h);
 	
-	ami_write_bmp ("./2_gradiente_horizontal.bmp", red2, green2, blue2, w*2 + 4, h);
+	ami_write_bmp ("./2_gradiente_horizontal.bmp", red2, green2, blue2, w, h);
+
+	aan_mascara_imagen (fred1, fgreen1, fblue1,
+	                    fred2, fgreen2, fblue2,
+	                    w, h, u_y);
+	
+	red2   = float_to_uchar (fred2,   w * h);
+	green2 = float_to_uchar (fgreen2, w * h);
+	blue2  = float_to_uchar (fblue2,  w * h);
+	
+	ami_write_bmp ("./2_gradiente_vertical.bmp", red2, green2, blue2, w, h);
 		
 	return 0;
 }

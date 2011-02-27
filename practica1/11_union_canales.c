@@ -10,7 +10,8 @@ aan_unir_canales_unsigned_char (unsigned char  *canal1,
                                           int   width,
                                           int   height)
 {
-	int canal_size;
+	unsigned char *output;
+	int i, j, canal_size;
 	
 	if (!canal1 || !canal2 || !canal_output)
 		return;
@@ -19,9 +20,28 @@ aan_unir_canales_unsigned_char (unsigned char  *canal1,
 
 	/* Reservamos la memoria del nuevo canal */
 	canal_size = sizeof (unsigned char) * (width*2+4) * height;
-	*canal_output = (unsigned char*) malloc (canal_size);
+	output = *canal_output = (unsigned char*) malloc (canal_size);
 	
-	
+	for (i = 0; i < width*2 + 4; i++)
+	{
+		for (j=0; j < height; j++)
+		{
+			/* Indice del pixel del canal de slida */
+			int index = (width*2 + 4) * j + i;
+			
+			/* Primer canal */
+			if (i<width)
+				output[index] = canal1[i];
+
+			/* Pixeles negros */
+			else if (i < width+4)
+				output[index] = 0;
+				
+			/* Segundo canal */
+			else
+				output[index] = canal2[i - (width+4)];
+		}
+	}
 	
 	return;
 }
@@ -29,5 +49,6 @@ aan_unir_canales_unsigned_char (unsigned char  *canal1,
 int
 main (int argc, char** argv)
 {
+	
 	return 0;
 }

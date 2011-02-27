@@ -46,6 +46,18 @@ aan_normalizar_imagen_unsigned_char (unsigned char *red,
                                                int  width,
                                                int height)
 {
+	if (!red || !green || !blue)
+	{
+		fprintf (stderr, "Ninguno de los canales puede ser NULL");
+		return;
+	}
+	
+	if (width < 1 || height < 1)
+	{
+		fprintf (stderr, "La anchura y la altura del canal deben ser mayores que 0");
+		return;
+	}
+
 	unsigned char *tmp = (unsigned char *) malloc (sizeof (unsigned char) * width * height);
 	
 	aan_normalizar_canal_unsigned_char (red, tmp, width, height);

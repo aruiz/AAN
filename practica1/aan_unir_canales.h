@@ -1,3 +1,6 @@
+#ifndef __AAN_UNIR_CANALES_H__
+#define __AAN_UNIR_CANALES_H__
+
 #include <stdlib.h>
 
 /* Funciones para unir dos canales en uno solo con una separacion de
@@ -20,3 +23,4 @@ aan_unir_canales_float (float  *canal1,
                         float **canal_output,
                         int   width,
                         int   height);
+#endif

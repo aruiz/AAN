@@ -34,12 +34,11 @@ int ami_read_bmp(char name[200], unsigned char **red, unsigned char **green, uns
 /* FUNCTION TO READ A 24 bits COLOR BMP FORMAT IMAGE  (RETURN 0 IF FINISH PROPERLY -1 OTHERWISE) */
 int ami_read_bmp(char name[200], unsigned char **red, unsigned char **green, unsigned char **blue, int *width, int *height)
 {
-   int i,j,k;
-   unsigned char r,g,b;
+   int i,j;
    HEADER header;
    INFOHEADER infoheader;
    FILE *fptr;
-   long size,m,cont;
+   long size,cont;
    unsigned char *image;
 
    /* Open file */
@@ -159,11 +158,10 @@ int ami_read_bmp(char name[200], unsigned char **red, unsigned char **green, uns
 int ami_write_bmp(char name[200], unsigned char *red, unsigned char *green, unsigned char *blue, int width, int height)
 {
    int i,j,k;
-   unsigned char r,g,b;
    HEADER header;
    INFOHEADER infoheader;
    FILE *fptr;
-   long cont,size,m;
+   long cont,size;
    unsigned char *image;
 
    /* Open file */

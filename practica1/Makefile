@@ -15,4 +15,4 @@ all: 11_union_canales 12_normalizar
 	
 clean:
 	rm -rf *bmp
-	rm 11_union_canales
+	rm 11_union_canales 12_normalizar

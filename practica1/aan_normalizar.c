@@ -34,7 +34,7 @@ aan_normalizar_canal_unsigned_char (unsigned char *canal_input,
 	for (i=0; i < (width * height); i++)
 	{
 		/* Hacemos la operacion con precision flotante y luego la pasamos a unsigned char */
-		canal_output[i] = (unsigned char)(255.0 * (float)(canal_input[i] - min) / (float)(max-min));
+		canal_output[i] = (unsigned char)(255.0 * ((float)(canal_input[i] - min) / (float)(max-min)));
 	}
 }
                                     
@@ -79,7 +79,7 @@ aan_normalizar_canal_float (float *canal_input,
                             int height)
 {
 	int i;
-	unsigned char max = 0, min = 255;
+	float max = 0.0, min = 1.0;
 	
 	if (!canal_input || !canal_output)
 	{
@@ -104,7 +104,7 @@ aan_normalizar_canal_float (float *canal_input,
 	for (i=0; i < (width * height); i++)
 	{
 		/* Hacemos la operacion con precision flotante y luego la pasamos a unsigned char */
-		canal_output[i] = (unsigned char)(255.0 * (float)(canal_input[i] - min) / (float)(max-min));
+		canal_output[i] = (canal_input[i] - min) / (max-min);
 	}
 }
                                     

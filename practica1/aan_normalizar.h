@@ -14,4 +14,17 @@ aan_normalizar_imagen_unsigned_char (unsigned char *red,
                                      unsigned char *blue,
                                                int  width,
                                                int height);
+
+void
+aan_normalizar_canal_float (float *canal_input,
+                            float *canal_output,
+                            int width,
+                            int height);
+
+void
+aan_normalizar_imagen_float (float *red,
+                             float *green,
+                             float *blue,
+                             int  width,
+                             int height);
 #endif

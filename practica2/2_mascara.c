@@ -1,7 +1,24 @@
-float **
-multiplicar_matrices (float **a, float **b)
+#include <stdlib.h>
+#include <math.h>
+
+#include "ami.h"
+#include "ami_bmp.h"
+
+#include "float_utils.h"
+
+float
+pixel_resultante (float **a, float **b)
 {
-	return 0;
+	int i,j;
+	float r = 0.0;
+	for (j=0; j < 3; j++)
+	{
+		for (i=0; i < 3; i++)
+		{
+			r += a[j][i] * b[j][i];
+		}
+	}
+	return r;
 }
 
 void
@@ -13,27 +30,26 @@ aan_mascara_canal (float  *canal_input,
 {
 	int i, j,
 	    k, l;
+	float **area;
 	
-	/* Area afectada por la mascara */
-	float *area[3] = {(float*)malloc (sizeof(float) * 3),
-	                  (float*)malloc (sizeof(float) * 3),
-	                  (float*)malloc (sizeof(float) * 3)};
+	/* Matriz para el area afectada por la mascara */
+	ami_malloc2d (area, float, 3, 3);
 
 	for (j=1; j < height-1; j++)	
 	{
 		for (i=1; i < width-1; i++)
 		{
+			int index = width * j + i;
 			/* FIXME: Se esta descartando los pixeles de los bordes del canal */
-			/* Copiamos el area afectada en una matriz */
+			
+			/* Copiamos el area afectada por la mascara para el pixel (i,j) */
 			for (k=0; k < 3; k++)
 				for (l=0; l < 3; l++)
-					area[k][0] = (width * (j - 1 + l)) + (i - 1 + k);
-					
+					area[k][0] = canal_input[(width * (j - 1 + l)) + (i - 1 + k)];
 			
+			canal_output[index] = pixel_resultante (m, area);
 		}		
 	}
-	
-	free (area[0]); free (area[1]); free (area[2]);
 }
 
 void
@@ -55,5 +71,42 @@ aan_mascara_imagen (float *red_input,
 int
 main (int argc, char **argv)
 {
+	int w, h;
+	unsigned char *red1, *green1, *blue1;
+	float         *fred1, *fgreen1, *fblue1;
+	
+	float **u_x, **u_y;
+
+	ami_malloc2d (u_x, float, 3, 3);
+	ami_malloc2d (u_y, float, 3, 3);
+
+	/* Gradiente horizontal */
+	u_x[0][0] = 0.25 * -(2.0 - sqrt(2.0));     u_x[0][1] = 0; u_x[0][2] = 0.25 * (2.0 - sqrt(2.0));
+	u_x[1][0] = 0.25 * -2.0 * (sqrt(2.0) - 1); u_x[1][1] = 0; u_x[1][2] = 0.25 * 2.0 * (sqrt(2.0) - 1) ;
+	u_x[2][0] = 0.25 * -(2.0-sqrt(2.0));       u_x[2][1] = 0; u_x[2][2] = 0.25 * (2.0 - sqrt(2.0));
+	
+	/* Gradiente vertical */
+	u_y[0][0] = 0.25 * -(2.0 - sqrt(2.0)); u_y[0][1] = 0.25 * -2.0 * (sqrt(2.0) - 1); u_y[0][2] = 0.25 * -(2.0-sqrt(2.0));
+	u_y[1][0] = 0;                         u_y[1][1] = 0;                             u_y[1][2] = 0;
+	u_y[2][0] = 0.25 *  (2.0 - sqrt(2.0)); u_y[2][1] = 0.25 *  2.0 * (sqrt(2.0) - 1); u_y[2][2] = 0.25 *  (2.0 - sqrt(2.0));
+	
+	if (argc < 2)
+	{
+		fprintf (stderr, "Usage: %s <BMP file>\n", argv[0]);
+		return -1;
+	}
+
+	/* Leemos el fichero dado por el primer argumento */	
+	if (ami_read_bmp (argv[1], &red1, &green1, &blue1, &w, &h) < 0)
+		return -1;
+	
+	/* Pasamos los canales a precision flotante */
+	fred1   = uchar_to_float (red1,   w * h);
+	fgreen1 = uchar_to_float (green1, w * h);
+	fblue1  = uchar_to_float (blue1,  w * h);
+	
+	
+	
+	
 	return 0;
 }

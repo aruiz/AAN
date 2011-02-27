@@ -5,6 +5,8 @@
 #include "ami.h"
 #include "ami_bmp.h"
 
+#include "float_utils.h"
+
 #include "aan_unir_canales.h"
 #include "aan_normalizar.h"
 
@@ -42,6 +44,10 @@ main (int argc, char** argv)
 	aan_unir_canales_unsigned_char (blue1, blue2, &blue3, w, h);
 	
 	ami_write_bmp ("./12_normalizar_rgb.bmp", red3, green3, blue3, w*2 + 4, h);
+	
+	/* Comprobamos la implementacion para canales de precision flotante */
+	
+	
 
 	return 0;
 }

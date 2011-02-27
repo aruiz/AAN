@@ -72,13 +72,18 @@ int
 main (int argc, char **argv)
 {
 	int w, h;
-	unsigned char *red1, *green1, *blue1;
-	float         *fred1, *fgreen1, *fblue1;
+	unsigned char *red1, *green1, *blue1,
+	              *red2, *green2, *blue2;
+	float         *fred1, *fgreen1, *fblue1,
+	              *fred2=0, *fgreen2=0, *fblue2=0;
+	              
+	              
 	
-	float **u_x, **u_y;
+	float **u_x, **u_y, **lap;
 
 	ami_malloc2d (u_x, float, 3, 3);
 	ami_malloc2d (u_y, float, 3, 3);
+	ami_malloc2d (lap, float, 3, 3);
 
 	/* Gradiente horizontal */
 	u_x[0][0] = 0.25 * -(2.0 - sqrt(2.0));     u_x[0][1] = 0; u_x[0][2] = 0.25 * (2.0 - sqrt(2.0));
@@ -105,8 +110,19 @@ main (int argc, char **argv)
 	fgreen1 = uchar_to_float (green1, w * h);
 	fblue1  = uchar_to_float (blue1,  w * h);
 	
+	fred1 = (float*) malloc (sizeof (float) * w * h);
+	fgreen1 = (float*) malloc (sizeof (float) * w * h);
+	fblue1 = (float*) malloc (sizeof (float) * w * h);
+		
+	aan_mascara_imagen (fred1, fgreen1, fblue1,
+	                    fred2, fgreen2, fblue2,
+	                    w, h, u_x);
 	
+	red2   = float_to_uchar (fred2,   w * h);
+	green2 = float_to_uchar (fgreen2, w * h);
+	blue2  = float_to_uchar (fblue2,  w * h);
 	
-	
+	ami_write_bmp ("./2_gradiente_horizontal.bmp", red2, green2, blue2, w*2 + 4, h);
+		
 	return 0;
 }

@@ -4,6 +4,7 @@
 #include "ami.h"
 #include "ami_bmp.h"
 
+#include "aan_normalizar.h"
 #include "float_utils.h"
 
 float
@@ -15,9 +16,14 @@ pixel_resultante (float **a, float **b)
 	{
 		for (i=0; i < 3; i++)
 		{
-			r += a[j][i] * b[j][i];
+			r = r + (a[j][i] * b[j][i]);
 		}
 	}
+	if (r < 0.0)
+		r = 0.0;
+	if (r > 1.0)
+		r = 1.0;
+	
 	return r;
 }
 
@@ -45,7 +51,7 @@ aan_mascara_canal (float  *canal_input,
 			/* Copiamos el area afectada por la mascara para el pixel (i,j) */
 			for (k=0; k < 3; k++)
 				for (l=0; l < 3; l++)
-					area[k][0] = canal_input[(width * (j - 1 + l)) + (i - 1 + k)];
+					area[k][l] = canal_input[(width * (j - 1 + l)) + (i - 1 + k)];
 			
 			canal_output[index] = pixel_resultante (m, area);
 		}		

@@ -116,9 +116,10 @@ main (int argc, char** argv)
 	aan_unir_canales_unsigned_char (green1, value, &green4, w, h);
 	aan_unir_canales_unsigned_char (blue1,  value, &blue4,  w, h);
 
-	/* Creamos una imagen resultante con todas las comparativas anteriores */
-	w = w*2 + 4;
+	/* Creamos una imagen resultante con todas las comparativas anteriores una sobre otra */
 
+	/* Cada canal tiene 3 veces la altura original y la anchura de la union de canales */
+	w = w*2 + 4;
 	red5   = malloc (sizeof (unsigned char) * w * h * 3);
 	green5 = malloc (sizeof (unsigned char) * w * h * 3);
 	blue5  = malloc (sizeof (unsigned char) * w * h * 3);
@@ -138,8 +139,10 @@ main (int argc, char** argv)
 	memcpy ((void*)(blue5 + w*h), (const void*)blue3, w * h);
 	memcpy ((void*)(blue5 + w*h*2), (const void*)blue4, w * h);
 	
+	/* Guardamos la imagen resultante */
 	ami_write_bmp ("./13_rgb_to_hsv.bmp", red5, green5, blue5, w, h*3);
 
+	/* Liberamos memoria */
 	free (red1); free (green1); free (blue1);
 	free (red2); free (green2); free (blue2);
 	free (red3); free (green3); free (blue3);

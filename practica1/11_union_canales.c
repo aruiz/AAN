@@ -14,9 +14,15 @@ aan_unir_canales_unsigned_char (unsigned char  *canal1,
 	int i, j, canal_size;
 	
 	if (!canal1 || !canal2 || !canal_output)
+	{
+		fprintf (stderr, "Uno de los canales es nulo");
 		return;
+	}
 	if (width < 1 && height < 1)
+	{
+		fprintf (stderr, "Una de las dimensiones es menor que 1");
 		return;
+	}
 
 	/* Reservamos la memoria del nuevo canal */
 	canal_size = sizeof (unsigned char) * (width*2+4) * height;
@@ -31,7 +37,7 @@ aan_unir_canales_unsigned_char (unsigned char  *canal1,
 			
 			/* Primer canal */
 			if (i<width)
-				output[index] = canal1[i];
+				output[index] = canal1[width * j + i];
 
 			/* Pixeles negros */
 			else if (i < width+4)
@@ -39,7 +45,7 @@ aan_unir_canales_unsigned_char (unsigned char  *canal1,
 				
 			/* Segundo canal */
 			else
-				output[index] = canal2[i - (width+4)];
+				output[index] = canal2[width * j + i - (width+4)];
 		}
 	}
 	
@@ -49,6 +55,23 @@ aan_unir_canales_unsigned_char (unsigned char  *canal1,
 int
 main (int argc, char** argv)
 {
+	int w, h;
+	unsigned char *red1, *green1, *blue1,
+	              *red2, *green2, *blue2;
 	
+	if (argc < 2)
+	{
+		fprintf (stderr, "Usage: %s <BMP file>\n", argv[0]);
+		return;
+	}
+	
+	if (ami_read_bmp (argv[1], &red1, &green1, &blue1, &w, &h) < 0)
+		return;
+		
+	aan_unir_canales_unsigned_char (red1, red1, &red2, w, h);
+	aan_unir_canales_unsigned_char (green1, green1, &green2, w, h);
+	aan_unir_canales_unsigned_char (blue1, blue1, &blue2, w, h);
+		
+	ami_write_bmp ("./11_union_canales.bmp", red2, green2, blue2, w*2 + 4, h);
 	return 0;
 }

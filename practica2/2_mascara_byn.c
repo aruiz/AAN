@@ -76,6 +76,8 @@ main (int argc, char **argv)
 	fred1   = uchar_to_float (red1,   w * h);
 	fgreen1 = uchar_to_float (green1, w * h);
 	fblue1  = uchar_to_float (blue1,  w * h);
+
+	aan_normalizar_imagen_float (fred1, fgreen1, fblue1, w , h);
 	
 	fred2   = (float*) malloc (sizeof (float) * w * h);
 	fgreen2 = (float*) malloc (sizeof (float) * w * h);
@@ -97,7 +99,7 @@ main (int argc, char **argv)
 	aan_unir_canales_unsigned_char (green1, green2, &green3, w, h);
 	aan_unir_canales_unsigned_char (blue1,  blue2,  &blue3,  w, h);
 	
-	ami_write_bmp ("./2_mascara_mod_gradiente.bmp", red3, green3, blue3, w*2 + 4, h);
+	ami_write_bmp ("./2_mascara_byn.bmp", red3, green3, blue3, w*2 + 4, h);
 
 	/* Liberamos memoria */
 	free (red2); free (green2); free (blue2);

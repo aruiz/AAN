@@ -79,6 +79,8 @@ main (int argc, char **argv)
 	fgreen1 = uchar_to_float (green1, w * h);
 	fblue1  = uchar_to_float (blue1,  w * h);
 	
+	aan_normalizar_imagen_float (fred1, fgreen1, fblue1, w , h);
+	
 	fred2   = (float*) malloc (sizeof (float) * w * h);
 	fgreen2 = (float*) malloc (sizeof (float) * w * h);
 	fblue2  = (float*) malloc (sizeof (float) * w * h);
@@ -86,8 +88,7 @@ main (int argc, char **argv)
 	fred3   = (float*) malloc (sizeof (float) * w * h);
 	fgreen3 = (float*) malloc (sizeof (float) * w * h);
 	fblue3  = (float*) malloc (sizeof (float) * w * h);
-	
-	
+		
 	/* Aplicamos ambos gradientes */
 	aan_mascara_imagen (fred1, fgreen1, fblue1,
 	                    fred2, fgreen2, fblue2,

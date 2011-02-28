@@ -44,6 +44,8 @@ main (int argc, char **argv)
 	fgreen1 = uchar_to_float (green1, w * h);
 	fblue1  = uchar_to_float (blue1,  w * h);
 	
+	aan_normalizar_imagen_float (fred1, fgreen1, fblue1, w , h);
+	
 	fred2   = (float*) malloc (sizeof (float) * w * h);
 	fgreen2 = (float*) malloc (sizeof (float) * w * h);
 	fblue2  = (float*) malloc (sizeof (float) * w * h);

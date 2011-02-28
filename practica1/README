@@ -9,8 +9,8 @@ siguientes:
 - 12_normalizar
 - 13_rgb_to_hsv
 
-Ejecutando cada uno de ellos
-
+Ejecutando cada uno de ellos usando un fichero BMP de 8 bits por canal como
+argumento se obtiene el resultado de cada enunciado.
 
 Fuentes
 =======

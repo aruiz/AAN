@@ -11,7 +11,8 @@ siguientes:
 - 2_mascara_mod_gradiente
 - 2_mascara_byn
 
-Ejecutando cada uno de ellos
+Ejecutando cada uno de ellos usando un fichero BMP de 8 bits por canal como
+argumento se obtiene el resultado de cada enunciado.
 
 
 Fuentes

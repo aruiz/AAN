@@ -210,6 +210,10 @@ main (int argc, char **argv)
 	u_y[1][0] = 0;                         u_y[1][1] = 0;                             u_y[1][2] = 0;
 	u_y[2][0] = 0.25 *  (2.0 - sqrt(2.0)); u_y[2][1] = 0.25 *  2.0 * (sqrt(2.0) - 1); u_y[2][2] = 0.25 *  (2.0 - sqrt(2.0));
 	
+	lap[0][0] = 1.0/3.0; lap[0][1] =  1.0/3.0; lap[0][2] = 1.0/3.0;
+	lap[1][0] = 1.0/3.0; lap[1][1] = -8.0/3.0; lap[1][2] = 1.0/3.0;
+	lap[2][0] = 1.0/3.0; lap[2][1] =  1.0/3.0; lap[2][2] = 1.0/3.0;
+	
 	if (argc < 2)
 	{
 		fprintf (stderr, "Usage: %s <BMP file>\n", argv[0]);
@@ -233,21 +237,39 @@ main (int argc, char **argv)
 	                    fred2, fgreen2, fblue2,
 	                    w, h, u_x);
 	
+	aan_normalizar_imagen_float (fred2, fgreen2, fblue2, w, h);
+	
 	red2   = float_to_uchar (fred2,   w * h);
 	green2 = float_to_uchar (fgreen2, w * h);
 	blue2  = float_to_uchar (fblue2,  w * h);
 	
-	ami_write_bmp ("./2_gradiente_horizontal.bmp", red2, green2, blue2, w, h);
+/*	ami_write_bmp ("./2_gradiente_horizontal.bmp", red2, green2, blue2, w, h);
+	free (red2); free (green2); free (blue2);
 
 	aan_mascara_imagen (fred1, fgreen1, fblue1,
 	                    fred2, fgreen2, fblue2,
 	                    w, h, u_y);
+
+	aan_normalizar_imagen_float (fred2, fgreen2, fblue2, w, h);
 	
 	red2   = float_to_uchar (fred2,   w * h);
 	green2 = float_to_uchar (fgreen2, w * h);
 	blue2  = float_to_uchar (fblue2,  w * h);
 	
 	ami_write_bmp ("./2_gradiente_vertical.bmp", red2, green2, blue2, w, h);
+	free (red2); free (green2); free (blue2);
+	
+	aan_mascara_imagen (fred1, fgreen1, fblue1,
+	                    fred2, fgreen2, fblue2,
+	                    w, h, lap);
+
+	aan_normalizar_imagen_float (fred2, fgreen2, fblue2, w, h);
+	
+	red2   = float_to_uchar (fred2,   w * h);
+	green2 = float_to_uchar (fgreen2, w * h);
+	blue2  = float_to_uchar (fblue2,  w * h);
+	
+	ami_write_bmp ("./2_laplace.bmp", red2, green2, blue2, w, h);*/
 		
 	return 0;
 }

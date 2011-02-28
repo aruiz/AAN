@@ -39,15 +39,13 @@ combinar (float  *canal1,
 int
 main (int argc, char **argv)
 {
-	int w, h;
+	int i, w, h;
 	unsigned char *red1, *green1, *blue1,
 	              *red2, *green2, *blue2,
 	              *red3, *green3, *blue3;
 	              
 	float         *fred1, *fgreen1, *fblue1,
-	              *fred2, *fgreen2, *fblue2,
-	              *fred3, *fgreen3, *fblue3,
-	              *fred4, *fgreen4, *fblue4;
+	              *fred2, *fgreen2, *fblue2;
 	
 	float **u_x, **u_y, **lap;
 
@@ -83,35 +81,17 @@ main (int argc, char **argv)
 	fgreen2 = (float*) malloc (sizeof (float) * w * h);
 	fblue2  = (float*) malloc (sizeof (float) * w * h);
 	
-	fred3   = (float*) malloc (sizeof (float) * w * h);
-	fgreen3 = (float*) malloc (sizeof (float) * w * h);
-	fblue3  = (float*) malloc (sizeof (float) * w * h);
-	
-	
-	/* Aplicamos ambos gradientes */
-	aan_mascara_imagen (fred1, fgreen1, fblue1,
-	                    fred2, fgreen2, fblue2,
-	                    w, h, u_x);
-	
-	aan_mascara_imagen (fred1, fgreen1, fblue1,
-	                    fred3, fgreen3, fblue3,
-	                    w, h, u_y);
+	/* Usamos el gradiente horizontal en el canal verde */
+	aan_mascara_canal (fgreen1, fgreen2, w, h, u_x);
+	aan_mascara_canal (fred1, fred2, w, h, u_y);
+	for (i=0; i < (w * h) ;i++)
+		fblue2[i] = 127.0;
 
-	/* Normalizamos ambas imagenes */
+	red2   = float_to_uchar (fred2,   w * h);
+	green2 = float_to_uchar (fgreen2, w * h);
+	blue2  = float_to_uchar (fblue2,  w * h);
+	
 	aan_normalizar_imagen_float (fred2, fgreen2, fblue2, w , h);
-	aan_normalizar_imagen_float (fred3, fgreen3, fblue3, w , h);
-	
-	/* Combinamos los resultados para hallar el modulo del gradiente */
-	combinar (fred2, fred3, &fred4, w, h);
-	combinar (fgreen2, fgreen3, &fgreen4, w, h);
-	combinar (fblue2, fblue3, &fblue4, w, h);
-
-	aan_normalizar_imagen_float (fred4, fgreen4, fblue4, w , h);
-
-	/* Guardamos la imagen */
-	red2   = float_to_uchar (fred4,   w * h);
-	green2 = float_to_uchar (fgreen4, w * h);
-	blue2  = float_to_uchar (fblue4,  w * h);
 	
 	aan_unir_canales_unsigned_char (red1,   red2,   &red3,   w, h);
 	aan_unir_canales_unsigned_char (green1, green2, &green3, w, h);
@@ -126,8 +106,6 @@ main (int argc, char **argv)
 	free (red1); free (green1); free (blue1);
 	free (fred1); free (fgreen1); free (fblue1);
 	free (fred2); free (fgreen2); free (fblue2);
-	free (fred3); free (fgreen3); free (fblue3);
-	free (fred4); free (fgreen4); free (fblue4);
 		
 	return 0;
 }

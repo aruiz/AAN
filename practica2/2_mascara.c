@@ -12,6 +12,8 @@ pixel_resultante (float **a, float **b)
 {
 	int i,j;
 	float r = 0.0;
+	
+	/* Sumamos los productos de cada uno de los elementos de cada matriz */
 	for (j=0; j < 3; j++)
 	{
 		for (i=0; i < 3; i++)
@@ -19,6 +21,8 @@ pixel_resultante (float **a, float **b)
 			r = r + (a[j][i] * b[j][i]);
 		}
 	}
+	
+	
 	if (r < 0.0)
 		r = 0.0;
 	if (r > 1.0)
@@ -41,21 +45,126 @@ aan_mascara_canal (float  *canal_input,
 	/* Matriz para el area afectada por la mascara */
 	ami_malloc2d (area, float, 3, 3);
 
-	for (j=1; j < height-1; j++)	
+	/* Hallamos el area afectada, utilizamos el pixel valido mas cercano en el caso
+	 * de estar en uno de los bordes o esquinas.
+	 */	
+	for (j=0; j < height; j++)
 	{
-		for (i=1; i < width-1; i++)
+		for (i=0; i < width; i++)
 		{
-			int index = width * j + i;
-			/* FIXME: Se esta descartando los pixeles de los bordes del canal */
+			/*Esquina superior izquierda */
+			if (i==0 && j==0)
+			{
+				area[0][0] = canal_input[0];
+				area[0][1] = canal_input[0];
+				area[0][2] = canal_input[1];
+				area[1][0] = canal_input[0];
+				area[2][0] = canal_input[width];
+
+				for (k=1; k < 3; k++)
+					for (l=1; l < 3; l++)
+						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];
+					
+			}
+			/* Esquina superior derecha */
+			else if (i == (width - 1) && j == 0)
+			{
+				area[0][2] = canal_input[width-1];
+				area[0][1] = canal_input[width-1];
+				area[0][0] = canal_input[width-2];
+				area[1][2] = canal_input[width-1];
+				area[2][2] = canal_input[width*2-1];
+				
+				for (k=1; k < 3; k++)
+					for (l=0; l < 2; l++)
+						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];
+			}
+			/* Esquina inferior izquierda */
+			else if (i == 0 && j == (height - 1))
+			{
+				area[0][2] = canal_input[width * (j-1)];
+				area[0][1] = canal_input[width * (j-1)];
+				area[1][2] = canal_input[width * (j-1)];
+				area[0][0] = canal_input[width * (j-2)];
+				area[2][2] = canal_input[(width * (j-1)) + 1];
+				
+				for (k=0; k < 2; k++)
+					for (l=1; l < 3; l++)
+						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];
+				
+			}
+			/* Esquina inferior derecha */
+			else if (i == (width - 1) && j == (height - 1))
+			{
+				area[2][2] = canal_input[width * height - 1];
+				area[1][2] = canal_input[width * height - 1];
+				area[0][2] = canal_input[width * (height-1) - 1];
+				area[2][1] = canal_input[width * height - 1];
+				area[2][0] = canal_input[width * height - 2];
+				
+				for (k=0; k < 2; k++)
+					for (l=0; l < 2; l++)
+						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];
+			}
+			/* Borde izquierdo (fuera de las esquinas) */
+			else if (i == 0)
+			{
+				area[0][0] = canal_input[(width * (j - 1 + k)) + i];
+				area[1][0] = canal_input[(width * (j - 1 + k)) + i];
+				area[2][0] = canal_input[(width * (j - 1 + k)) + i];
+				
+				for (k=0; k < 3; k++)
+					for (l=1; l < 3; l++)
+						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];
+				
+			}
+			/* Borde derecho (fuera de las esquinas) */
+			else if (i == (width-1))
+			{
+				area[0][2] = canal_input[(width * (j - 1 + k)) + i];
+				area[1][2] = canal_input[(width * (j - 1 + k)) + i];
+				area[2][2] = canal_input[(width * (j - 1 + k)) + i];
+				
+				for (k=0; k < 3; k++)
+					for (l=0; l < 2; l++)
+						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];
+			}
+			/* Borde superior (fuera de las esquinas) */
+			else if (j == 0)
+			{
+				area[0][0] = canal_input[(width * j) + (i - 1 + l)];
+				area[0][1] = canal_input[(width * j) + (i - 1 + l)];
+				area[0][2] = canal_input[(width * j) + (i - 1 + l)];
+				
+				for (k=1; k < 3; k++)
+					for (l=0; l < 3; l++)
+						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];
+			}
+			/* Borde inferior (fuera de las esquinas) */
+			else if (j == (height-1))
+			{
+				area[2][0] = canal_input[(width * j) + (i - 1 + l)];
+				area[2][1] = canal_input[(width * j) + (i - 1 + l)];
+				area[2][2] = canal_input[(width * j) + (i - 1 + l)];
+				
+				for (k=0; k < 2; k++)
+					for (l=0; l < 3; l++)
+						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];
+			}
+			else
+			{
+				for (k=0; k < 3; k++)
+					for (l=0; l < 3; l++)
+						area[k][l] = canal_input[width * (j - 1 + k) + (i - 1 + l)];
+			}
 			
-			/* Copiamos el area afectada por la mascara para el pixel (i,j) */
-			for (k=0; k < 3; k++)
-				for (l=0; l < 3; l++)
-					area[k][l] = canal_input[(width * (j - 1 + l)) + (i - 1 + k)];
-			
-			canal_output[index] = pixel_resultante (m, area);
-		}		
+			/* Hallamos el resultado y lo guardamos en el canal de salida */
+			canal_output[width * j + i] = pixel_resultante (m, area);
+		}
 	}
+	
+	
+	ami_free2d (area);
 }
 
 void

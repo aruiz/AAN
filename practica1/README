@@ -1,0 +1,32 @@
+Compilar
+========
+Ejecutar 'make' y se compilaran todos los programas.
+
+Los programas implementan cada uno de los enunciados de la practica y son los
+siguientes:
+
+- 11_union_canales
+- 12_normalizar
+- 13_rgb_to_hsv
+
+Ejecutando cada uno de ellos
+
+
+Fuentes
+=======
+
+Los programas principales estan en <programa>.c respectivamente.
+
+Funciones de ayuda para pasar de flotante a byte sin signo:
+- float_utils.c
+- float_utils.h
+
+Union de canales:
+- aan_unir_canales.c
+- aan_unir_canales.h
+
+Normalizacion:
+- aan_normalizar.c
+- aan_normalizar.h
+
+

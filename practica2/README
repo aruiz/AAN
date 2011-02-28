@@ -1,0 +1,26 @@
+Compilar
+========
+Ejecutar 'make' y se compilaran todos los programas:
+
+Los programas implementan cada uno de los enunciados de la practica y son los
+siguientes:
+
+- 2_mascara_grad_vertical
+- 2_mascara_grad_horizontal
+- 2_mascara_laplaciana
+- 2_mascara_mod_gradiente
+- 2_mascara_byn
+
+Ejecutando cada uno de ellos
+
+
+Fuentes
+=======
+
+Los programas principales estan en <programa>.c respectivamente.
+
+La implementacion de las funciones de aplicacion de mascaras esta en:
+- aan_normalizar.c
+- aan_normalizar.h
+
+El resto de las fuentes son herramientas copiadas de la practica uno

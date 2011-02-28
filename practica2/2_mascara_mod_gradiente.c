@@ -95,18 +95,21 @@ main (int argc, char **argv)
 	                    w, h, u_x);
 	
 	aan_mascara_imagen (fred1, fgreen1, fblue1,
-	                    fred2, fgreen2, fblue2,
+	                    fred3, fgreen3, fblue3,
 	                    w, h, u_y);
+
+	aan_normalizar_imagen_float (fred2, fgreen2, fblue2, w , h);
+	aan_normalizar_imagen_float (fred3, fgreen3, fblue3, w , h);
 	
 	combinar (fred2, fred3, &fred4, w, h);
 	combinar (fgreen2, fgreen3, &fgreen4, w, h);
 	combinar (fblue2, fblue3, &fblue4, w, h);
 
+	aan_normalizar_imagen_float (fred4, fgreen4, fblue4, w , h);
+
 	red2   = float_to_uchar (fred4,   w * h);
 	green2 = float_to_uchar (fgreen4, w * h);
 	blue2  = float_to_uchar (fblue4,  w * h);
-	
-	aan_normalizar_imagen_float (fred4, fgreen4, fblue4, w , h);
 	
 	aan_unir_canales_unsigned_char (red1,   red2,   &red3,   w, h);
 	aan_unir_canales_unsigned_char (green1, green2, &green3, w, h);

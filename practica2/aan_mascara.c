@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "ami.h"
 
 float
@@ -15,7 +16,7 @@ pixel_resultante (float **a, float **b)
 		}
 	}
 	
-	
+	/* Normalizamos el resultado */
 	if (r < 0.0)
 		r = 0.0;
 	if (r > 1.0)

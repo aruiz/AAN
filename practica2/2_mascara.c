@@ -14,7 +14,8 @@ main (int argc, char **argv)
 {
 	int w, h;
 	unsigned char *red1, *green1, *blue1,
-	              *red2, *green2, *blue2;
+	              *red2, *green2, *blue2,
+	              *red3, *green3, *blue3;
 	float         *fred1, *fgreen1, *fblue1,
 	              *fred2=0, *fgreen2=0, *fblue2=0;
 	
@@ -26,7 +27,7 @@ main (int argc, char **argv)
 
 	/* Gradiente horizontal */
 	u_x[0][0] = 0.25 * -(2.0 - sqrt(2.0));     u_x[0][1] = 0; u_x[0][2] = 0.25 * (2.0 - sqrt(2.0));
-	u_x[1][0] = 0.25 * -2.0 * (sqrt(2.0) - 1); u_x[1][1] = 0; u_x[1][2] = 0.25 * 2.0 * (sqrt(2.0) - 1) ;
+	u_x[1][0] = 0.25 * -2.0 * (sqrt(2.0) - 1); u_x[1][1] = 0; u_x[1][2] = 0.25 * 2.0 * (sqrt(2.0) - 1);
 	u_x[2][0] = 0.25 * -(2.0-sqrt(2.0));       u_x[2][1] = 0; u_x[2][2] = 0.25 * (2.0 - sqrt(2.0));
 	
 	/* Gradiente vertical */
@@ -68,10 +69,12 @@ main (int argc, char **argv)
 	green2 = float_to_uchar (fgreen2, w * h);
 	blue2  = float_to_uchar (fblue2,  w * h);
 	
-/*	ami_write_bmp ("./2_gradiente_horizontal.bmp", red2, green2, blue2, w, h);
+	
+	
+	ami_write_bmp ("./2_gradiente_horizontal.bmp", red2, green2, blue2, w, h);
 	free (red2); free (green2); free (blue2);
 
-	aan_mascara_imagen (fred1, fgreen1, fblue1,
+/*	aan_mascara_imagen (fred1, fgreen1, fblue1,
 	                    fred2, fgreen2, fblue2,
 	                    w, h, u_y);
 

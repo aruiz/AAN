@@ -20,4 +20,4 @@ all: 11_union_canales 12_normalizar 13_rgb_to_hsv
 	
 clean:
 	rm -rf *bmp
-	rm 11_union_canales 12_normalizar rgb_to_hsv
+	rm 11_union_canales 12_normalizar 13_rgb_to_hsv

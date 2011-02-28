@@ -108,6 +108,6 @@ main (int argc, char **argv)
 	free (red1); free (green1); free (blue1);
 	free (fred1); free (fgreen1); free (fblue1);
 	free (fred2); free (fgreen2); free (fblue2);
-		
+	ami_free2d (u_x); ami_free2d (u_y);
 	return 0;
 }

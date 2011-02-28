@@ -49,7 +49,7 @@ main (int argc, char **argv)
 	              *fred3, *fgreen3, *fblue3,
 	              *fred4, *fgreen4, *fblue4;
 	
-	float **u_x, **u_y, **lap;
+	float **u_x, **u_y;
 
 	if (argc < 2)
 	{
@@ -62,7 +62,6 @@ main (int argc, char **argv)
 	
 	ami_malloc2d (u_x, float, 3, 3);
 	ami_malloc2d (u_y, float, 3, 3);
-	ami_malloc2d (lap, float, 3, 3);
 
 	/* Gradiente horizontal */
 	u_x[0][0] = 0.25 * -(2.0 - sqrt(2.0));     u_x[0][1] = 0; u_x[0][2] = 0.25 * (2.0 - sqrt(2.0));
@@ -129,6 +128,7 @@ main (int argc, char **argv)
 	free (fred2); free (fgreen2); free (fblue2);
 	free (fred3); free (fgreen3); free (fblue3);
 	free (fred4); free (fgreen4); free (fblue4);
-		
+	
+	ami_free2d (u_x); 	ami_free2d (u_y);
 	return 0;
 }

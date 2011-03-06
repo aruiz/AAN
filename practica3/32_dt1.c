@@ -7,15 +7,22 @@ int
 main (int argc, char** argv)
 {
 	float Presa, Cazador;
-	float P0 = 1.0, C0 = 0.5;
-	float a = 100.3;
-	float d = 0.3;
 
-	fprintf (stderr, "3.1: b = e = f = 0\n");
-	lotka_volterra (a, 0, d, 0, 0,
+	float P0 = 0.1, C0 = 1.0;
+	
+	float a = 0.1;
+	float b = 31.3;
+	float d = 0.3;
+	float e = 10.3;
+	float f = 10.3;
+
+	fprintf (stderr, "3.2: dt = 0");
+	
+	lotka_volterra (a, b, d, e, f,
 	                P0, C0,
 	                &Presa, &Cazador,
-	                0.25,
+	                0.3,
 	                NITER);
+
 	return 0;
 }

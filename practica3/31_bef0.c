@@ -7,7 +7,7 @@ int
 main (int argc, char** argv)
 {
 	float Presa, Cazador;
-	float P0 = 1.0, C0 = 0.5;
+	float P0 = 1000.0, C0 = 100.0;
 	float a = 100.3;
 	float d = 0.3;
 
@@ -15,7 +15,7 @@ main (int argc, char** argv)
 	lotka_volterra (a, 0, d, 0, 0,
 	                P0, C0,
 	                &Presa, &Cazador,
-	                0.25,
+	                0.01,
 	                NITER);
 	return 0;
 }

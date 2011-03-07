@@ -1,0 +1,22 @@
+Compilar
+========
+Ejecutar 'make' y se compilaran todos los programas:
+
+Los programas implementan cada uno de los enunciados de la practica y son los
+siguientes:
+
+- 31_bef0
+- 32_dt1
+- 33_equilibrio
+- 34_extincion
+
+Ejecutando cada uno de ellos se obtendra un fichero .csv de su mismo nombre con los resultados.
+Para ejecutarlos todos ejecutar 'make test'.
+
+Fuentes
+=======
+
+La funcion de resolucion de la ecuacion de Lotka-Volterra esta en:
+
+- lotka_volterra.c
+- lotka_volterra.h

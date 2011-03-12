@@ -1,12 +1,14 @@
+/* Esta funcion */
 void
 aan_ecuacion_calor_metodo_explicito_canal (float  *canal_input,
                                            float  *canal_output,
                                            int   width,
                                            int   height,
-                                           float **m)
+                                           float dt)
 {
 	int i, j,
 	    k, l;
+	float   pixel;
 	float **area;
 	
 	/* Matriz para el area afectada por la mascara */
@@ -126,10 +128,26 @@ aan_ecuacion_calor_metodo_explicito_canal (float  *canal_input,
 			}
 			
 			/* Hallamos el resultado y lo guardamos en el canal de salida */
-			canal_output[width * j + i] = pixel_resultante (m, area);
+			
+			/* Inicializamos el valor resultante con el de la misma coordenada del canal de entrada */
+			canal_output[width * j + i] = area[1][1]; /* Tambien canal_input[width * j + i] */
+			
+			/* Recorremos todos los valores del area afectada*/
+			for (k=0; k < 3; k++)
+			{
+				for (l=0; l < 3; l++)
+				{
+					/* Hacemos la sumatoria de cada elemento */
+					/* Separamos el pixel central de los de al rededor */
+					if (l!=1 && k!=1)
+						canal_output[width * j + i] = canal_output[width * j + i] + ((dt/3.0) * area[k][l]);
+					else
+						canal_output[width * j + i] = canal_output[width * j + i] + ((dt/3.0) * (-8.0 * area[k][l]));
+				}
+			}
 		}
 	}
-		
+
 	ami_free2d (area);
 }
 
@@ -145,4 +163,12 @@ aan_ecuacion_calor_metodo_explícito(float *red_input,
                                     int height,
                                     float dt, int Niter)
 {
+	int i;
+
+	for (i=0; i<Niter; i++)
+	{
+		aan_ecuacion_calor_metodo_explicito_canal (red_input, red_output, width, height, dt);
+		aan_ecuacion_calor_metodo_explicito_canal (red_input, red_output, width, height, dt);
+		aan_ecuacion_calor_metodo_explicito_canal (red_input, red_output, width, height, dt);
+	}
 }

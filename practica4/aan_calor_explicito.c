@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include "ami.h"
+
 /* Esta funcion */
 void
 aan_ecuacion_calor_metodo_explicito_canal (float  *canal_input,
@@ -8,7 +11,6 @@ aan_ecuacion_calor_metodo_explicito_canal (float  *canal_input,
 {
 	int i, j,
 	    k, l;
-	float   pixel;
 	float **area;
 	
 	/* Matriz para el area afectada por la mascara */
@@ -153,7 +155,7 @@ aan_ecuacion_calor_metodo_explicito_canal (float  *canal_input,
 
 
 void
-aan_ecuacion_calor_metodo_explícito(float *red_input,
+aan_ecuacion_calor_metodo_explicito(float *red_input,
                                     float *green_input,
                                     float *blue_input,
                                     float *red_output,

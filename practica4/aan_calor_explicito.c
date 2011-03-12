@@ -1,36 +1,9 @@
-#include <stdlib.h>
-#include "ami.h"
-
-float
-pixel_resultante (float **a, float **b)
-{
-	int i,j;
-	float r = 0.0;
-	
-	/* Sumamos los productos de cada uno de los elementos de cada matriz */
-	for (j=0; j < 3; j++)
-	{
-		for (i=0; i < 3; i++)
-		{
-			r = r + (a[j][i] * b[j][i]);
-		}
-	}
-	
-	/* Normalizamos el resultado */
-	if (r < 0.0)
-		r = 0.0;
-	if (r > 1.0)
-		r = 1.0;
-	
-	return r;
-}
-
 void
-aan_mascara_canal (float  *canal_input,
-                   float  *canal_output,
-                     int   width,
-                     int   height,
-                   float **m)
+aan_ecuacion_calor_metodo_explicito_canal (float  *canal_input,
+                                           float  *canal_output,
+                                           int   width,
+                                           int   height,
+                                           float **m)
 {
 	int i, j,
 	    k, l;
@@ -156,23 +129,20 @@ aan_mascara_canal (float  *canal_input,
 			canal_output[width * j + i] = pixel_resultante (m, area);
 		}
 	}
-	
-	
+		
 	ami_free2d (area);
 }
 
+
 void
-aan_mascara_imagen (float *red_input,
-                    float *green_input,
-                    float *blue_input,
-                    float *red_output,
-                    float *green_output,
-                    float *blue_output,
-                    int width,
-                    int height,
-                    float **m)
+aan_ecuacion_calor_metodo_explícito(float *red_input,
+                                    float *green_input,
+                                    float *blue_input,
+                                    float *red_output,
+                                    float *green_output,
+                                    float *blue_output,
+                                    int width,
+                                    int height,
+                                    float dt, int Niter)
 {
-	aan_mascara_canal (red_input,   red_output,   width, height, m);
-	aan_mascara_canal (green_input, green_output, width, height, m);
-	aan_mascara_canal (blue_input,  blue_output,  width, height, m);
 }

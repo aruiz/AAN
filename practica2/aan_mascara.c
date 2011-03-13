@@ -103,9 +103,9 @@ aan_mascara_canal (float  *canal_input,
 			/* Borde izquierdo (fuera de las esquinas) */
 			else if (i == 0)
 			{
-				area[0][0] = canal_input[(width * (j - 1 + k)) + i];
-				area[1][0] = canal_input[(width * (j - 1 + k)) + i];
-				area[2][0] = canal_input[(width * (j - 1 + k)) + i];
+				area[0][0] = canal_input[(width * (j - 1 + 0)) + i];
+				area[1][0] = canal_input[(width * (j - 1 + 1)) + i];
+				area[2][0] = canal_input[(width * (j - 1 + 2)) + i];
 				
 				for (k=0; k < 3; k++)
 					for (l=1; l < 3; l++)
@@ -115,9 +115,9 @@ aan_mascara_canal (float  *canal_input,
 			/* Borde derecho (fuera de las esquinas) */
 			else if (i == (width-1))
 			{
-				area[0][2] = canal_input[(width * (j - 1 + k)) + i];
-				area[1][2] = canal_input[(width * (j - 1 + k)) + i];
-				area[2][2] = canal_input[(width * (j - 1 + k)) + i];
+				area[0][2] = canal_input[(width * (j - 1 + 0)) + i];
+				area[1][2] = canal_input[(width * (j - 1 + 1)) + i];
+				area[2][2] = canal_input[(width * (j - 1 + 2)) + i];
 				
 				for (k=0; k < 3; k++)
 					for (l=0; l < 2; l++)
@@ -126,9 +126,9 @@ aan_mascara_canal (float  *canal_input,
 			/* Borde superior (fuera de las esquinas) */
 			else if (j == 0)
 			{
-				area[0][0] = canal_input[(width * j) + (i - 1 + l)];
-				area[0][1] = canal_input[(width * j) + (i - 1 + l)];
-				area[0][2] = canal_input[(width * j) + (i - 1 + l)];
+				area[0][0] = canal_input[(width * j) + (i - 1 + 0)];
+				area[0][1] = canal_input[(width * j) + (i - 1 + 1)];
+				area[0][2] = canal_input[(width * j) + (i - 1 + 2)];
 				
 				for (k=1; k < 3; k++)
 					for (l=0; l < 3; l++)
@@ -137,9 +137,9 @@ aan_mascara_canal (float  *canal_input,
 			/* Borde inferior (fuera de las esquinas) */
 			else if (j == (height-1))
 			{
-				area[2][0] = canal_input[(width * j) + (i - 1 + l)];
-				area[2][1] = canal_input[(width * j) + (i - 1 + l)];
-				area[2][2] = canal_input[(width * j) + (i - 1 + l)];
+				area[2][0] = canal_input[(width * j) + (i - 1 + 0)];
+				area[2][1] = canal_input[(width * j) + (i - 1 + 1)];
+				area[2][2] = canal_input[(width * j) + (i - 1 + 2)];
 				
 				for (k=0; k < 2; k++)
 					for (l=0; l < 3; l++)

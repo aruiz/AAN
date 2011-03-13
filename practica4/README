@@ -1,0 +1,31 @@
+Compilar
+========
+Ejecutar 'make' y se compilaran todos los programas:
+
+Los programas implementan cada uno de los enunciados de la practica y son los
+siguientes:
+
+- 4_calor_explicito_p1
+- 4_calor_explicito_p2
+- 4_calor_explicito_p3
+- 4_calor_explicito_p4
+- 4_calor_explicito_negativo
+
+Para compilar ejecutar 'make'
+Para generar los videos es necesario tener installado el programa mencoder.
+
+Para generar los videos 'make video' generara videos en cada uno de los directorios:
+
+- p1/p1.avi
+- p2/p2.avi
+- p3/p3.avi
+- p4/p4.avi
+- negativo/negativo.avi
+
+Fuentes
+=======
+
+
+Las fuentes de la implementacion de la funcion estan en estos ficheros
+- aan_calor_explicito.c
+- aan_calor_explicito.h

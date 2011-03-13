@@ -25,7 +25,13 @@ Para generar los videos 'make video' generara videos en cada uno de los director
 Fuentes
 =======
 
-
 Las fuentes de la implementacion de la funcion estan en estos ficheros
 - aan_calor_explicito.c
 - aan_calor_explicito.h
+
+Videos
+======
+
+Los videos resultantes han sido publicados en la siguiente lista de reproduccion
+de youtube:
+http://www.youtube.com/view_play_list?p=17EFEE8F55A021AE

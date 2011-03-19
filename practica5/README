@@ -1,1 +1,31 @@
+Compilar
+========
+Ejecutar 'make' y se compilaran todos los programas:
 
+Los programas implementan cada uno de los enunciados de la practica y son los
+siguientes:
+
+- 5_calor_explicito_fuerza_externa_p1
+- 5_calor_explicito_fuerza_externa_p2
+
+Para compilar ejecutar 'make'
+Para generar los videos es necesario tener installado el programa mencoder.
+
+Para generar los videos 'make video' generara videos en cada uno de los directorios:
+
+- p1/p1.avi
+- p2/p2.avi
+
+Fuentes
+=======
+
+Las fuentes de la implementacion de la funcion estan en estos ficheros
+- aan_calor_explicito_fuerza_externa.c
+- aan_calor_explicito_fuerza_externa.h
+
+Videos
+======
+
+Los videos resultantes han sido publicados en la siguiente lista de reproduccion
+de youtube:
+http://www.youtube.com/view_play_list?p=37EDB5B32D71604E

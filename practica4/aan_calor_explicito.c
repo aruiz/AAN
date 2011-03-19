@@ -169,14 +169,25 @@ aan_ecuacion_calor_metodo_explicito(float *red_input,
 {
 	int i;
 
+	float *red_tmp   = (float*)malloc (sizeof (float) * width * height);
+	float *green_tmp = (float*)malloc (sizeof (float) * width * height);
+	float *blue_tmp  = (float*)malloc (sizeof (float) * width * height);
+	memcpy (red_tmp,   red_input,   sizeof(float) * width * height);
+	memcpy (green_tmp, green_input, sizeof(float) * width * height);
+	memcpy (blue_tmp,  blue_input,  sizeof(float) * width * height);
+
 	for (i=0; i<Niter; i++)
 	{
 		aan_ecuacion_calor_metodo_explicito_canal (red_input, red_output, width, height, dt);
 		aan_ecuacion_calor_metodo_explicito_canal (green_input, green_output, width, height, dt);
 		aan_ecuacion_calor_metodo_explicito_canal (blue_input, blue_output, width, height, dt);
 		
-		memcpy (red_input, red_output, sizeof(float) * width * height);
-		memcpy (green_input, green_output, sizeof(float) * width * height);
-		memcpy (blue_input, blue_output, sizeof(float) * width * height);
+		memcpy (red_tmp,   red_output,   sizeof(float) * width * height);
+		memcpy (green_tmp, green_output, sizeof(float) * width * height);
+		memcpy (blue_tmp,  blue_output,  sizeof(float) * width * height);
 	}
+
+	free(red_tmp);
+	free(green_tmp);
+	free(blue_tmp);
 }

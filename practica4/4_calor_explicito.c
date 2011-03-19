@@ -75,9 +75,9 @@ main (int argc, char** argv)
 		green = float_to_uchar (fgreen2, w*h);
 		blue  = float_to_uchar (fblue2,  w*h);
 
-		memcpy (fred2,   fred1,   sizeof(float) * w * h);
-		memcpy (fgreen2, fgreen1, sizeof(float) * w * h);
-		memcpy (fblue2,  fblue1,  sizeof(float) * w * h);
+		memcpy (fred1,   fred2,   sizeof(float) * w * h);
+		memcpy (fgreen1, fgreen2, sizeof(float) * w * h);
+		memcpy (fblue1,  fblue2,  sizeof(float) * w * h);
 
 		ami_write_bmp (salida, red, green, blue, w, h);
 

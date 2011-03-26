@@ -22,7 +22,7 @@ aan_ecualizar_histograma(float *h, float *e, int *f)
 		}
 		
 		/* Asignamos a f[k] la sumatoria resultante h[0..i] */
-		f[k] = sum_h;
+		f[k] = (int)(sum_h * 255.0);
 	}
 }
 
@@ -38,6 +38,6 @@ aan_ecualizar_histograma_canal(float *canal_input,
 	for (i=0; i<(width * height); i++)
 	{
 		int color = (int)(255.0 * canal_input[i]);
-		canal_output[i] = f[color];
+		canal_output[i] = f[color] / 255.0;
 	}
 }

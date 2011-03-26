@@ -1,0 +1,27 @@
+Compilar
+========
+Ejecutar 'make' y se compilara el programa:
+
+El programa implementa ambos enunciados de la practica y es el siguiente:
+
+- 6_ecualizacion_histogramas
+
+Uso del programa
+================
+Hay que ejecutarlo con un argumento en la linea de comandos que apunte a un
+fichero BMP valido, por ejemplo:
+
+ $ ./6_ecualizacion_histogramas nutella.bmp 
+
+El programa generara dos imagenes con los resultados, una para cada enunciado
+respectivamente:
+
+- imagen_ecualizada_e1.bmp
+- imagen_ecualizada_e2.bmp
+
+Fuentes
+=======
+
+Las fuentes de la implementacion de la funcion estan en estos ficheros
+- aan_ecualizar_histograma.c
+- aan_ecualizar_histograma.h

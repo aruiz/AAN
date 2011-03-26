@@ -5,6 +5,7 @@
 #include "ami_bmp.h"
 
 #include "aan_ecualizar_histograma.h"
+#include "aan_unir_canales.h"
 #include "float_utils.h"
 
 float*
@@ -93,8 +94,7 @@ int
 main (int argc, char** argv)
 {
 	int w, h;
-	unsigned char *red1, *green1, *blue1,
-	              *red2, *green2, *blue2;
+	unsigned char *red, *green, *blue;
 
 	float *fred1, *fgreen1, *fblue1,
           *fred2, *fgreen2, *fblue2,
@@ -111,13 +111,13 @@ main (int argc, char** argv)
 	}
 
 	/* Leemos el fichero dado por el primer argumento */
-	if (ami_read_bmp (argv[1], &red1, &green1, &blue1, &w, &h) < 0)
+	if (ami_read_bmp (argv[1], &red, &green, &blue, &w, &h) < 0)
 		return -1;
 
 	/* Generarmos histogramas de origen */		
-	hr = generar_histograma (red1,   w, h);
-	hg = generar_histograma (green1, w, h);
-	hb = generar_histograma (blue1,  w, h);
+	hr = generar_histograma (red,   w, h);
+	hg = generar_histograma (green, w, h);
+	hb = generar_histograma (blue,  w, h);
 	
 	/* Generamos histogramas objetivo */
 	e1 = generar_e1();
@@ -130,9 +130,10 @@ main (int argc, char** argv)
 	normalizar_histograma(e1);
 	normalizar_histograma(e2);
 
-	fred1   = uchar_to_float (red1,   w*h);
-	fgreen1 = uchar_to_float (green1, w*h);
-	fblue1  = uchar_to_float (blue1,  w*h);
+	fred1   = uchar_to_float (red,   w*h);
+	fgreen1 = uchar_to_float (green, w*h);
+	fblue1  = uchar_to_float (blue,  w*h);
+	free (red); free (green); free (blue);
 
 	/* Reservamos memoria para los canales de salida y el vector de ecualizacion f */
 	fred2    = (float*)malloc (sizeof(float) * w*h);
@@ -148,16 +149,44 @@ main (int argc, char** argv)
 	aan_ecualizar_histograma_canal(fgreen1, fgreen2, w, h, f);
 	aan_ecualizar_histograma(hb, e1, f); /* azul */
 	aan_ecualizar_histograma_canal(fblue1,  fblue2,  w, h, f);
-	
-	red2   = float_to_uchar (fred2,   w*h);
-	green2 = float_to_uchar (fgreen2, w*h);
-	blue2  = float_to_uchar (fblue2,  w*h);
+		
+	aan_unir_canales_float (fred1,   fred2,   &fred3,   w, h);
+	aan_unir_canales_float (fgreen1, fgreen2, &fgreen3, w, h);
+	aan_unir_canales_float (fblue1,  fblue2,  &fblue3,  w, h);
+
+	red   = float_to_uchar (fred3,   (w*2 + 4)*h);
+	green = float_to_uchar (fgreen3, (w*2 + 4)*h);
+	blue  = float_to_uchar (fblue3,  (w*2 + 4)*h);
+
+	ami_write_bmp ("imagen_ecualizada_e1.bmp", red, green, blue, w*2 + 4, h);
 
 	/* Liberamos memoria */
-	free (red1); free (green1); free (blue1);
-	free (red2); free (green2); free (blue2);
+	free (red); free (green); free (blue);
+	free (fred3); free (fgreen3); free (fblue3);
+
+	/************* Ecualizamos al histograma E1 (y = 1/256) *************/
+	aan_ecualizar_histograma(hr, e2, f); /* rojo */
+	aan_ecualizar_histograma_canal(fred1,   fred2,   w, h, f);
+	aan_ecualizar_histograma(hg, e2, f); /* verde */
+	aan_ecualizar_histograma_canal(fgreen1, fgreen2, w, h, f);
+	aan_ecualizar_histograma(hb, e2, f); /* azul */
+	aan_ecualizar_histograma_canal(fblue1,  fblue2,  w, h, f);
+		
+	aan_unir_canales_float (fred1,   fred2,   &fred3,   w, h);
+	aan_unir_canales_float (fgreen1, fgreen2, &fgreen3, w, h);
+	aan_unir_canales_float (fblue1,  fblue2,  &fblue3,  w, h);
+
+	red   = float_to_uchar (fred3,   (w*2 + 4)*h);
+	green = float_to_uchar (fgreen3, (w*2 + 4)*h);
+	blue  = float_to_uchar (fblue3,  (w*2 + 4)*h);
+
+	ami_write_bmp ("imagen_ecualizada_e2.bmp", red, green, blue, w*2 + 4, h);
+		
+	/* Liberamos memoria */
+	free (red); free (green); free (blue);
 	free (fred1); free (fgreen1); free (fblue1);
 	free (fred2); free (fgreen2); free (fblue2);
+	free (fred3); free (fgreen3); free (fblue3);
 	free (hr); free (hg); free (hb); free(e1); free(e2); free(f);
 	return 0;
 }

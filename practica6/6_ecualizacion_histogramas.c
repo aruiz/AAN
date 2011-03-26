@@ -92,11 +92,12 @@ generar_e2 ()
 int
 main (int argc, char** argv)
 {
-	int i, w, h;
+	int w, h;
 	unsigned char *red, *green, *blue;
 
-	float tmp = 0.0;
-
+	float *fred1, *fgreen1, *fblue1,
+          *fred2, *fgreen2, *fblue2;
+	
 	float *hr, *hg, *hb;
 	float *e1, *e2;
 
@@ -109,20 +110,28 @@ main (int argc, char** argv)
 	/* Leemos el fichero dado por el primer argumento */
 	if (ami_read_bmp (argv[1], &red, &green, &blue, &w, &h) < 0)
 		return -1;
-		
+
+	/* Generarmos histogramas de origen */		
 	hr = generar_histograma (red,   w, h);
 	hg = generar_histograma (green, w, h);
 	hb = generar_histograma (blue,  w, h);
 	
-	normalizar_histograma(hr);
-	normalizar_histograma(hg);
-	normalizar_histograma(hr);
-
+	/* Generamos histogramas objetivo */
 	e1 = generar_e1();
 	e2 = generar_e2();
 	
+	/* Normalizamos los histogramas */
+	normalizar_histograma(hr);
+	normalizar_histograma(hg);
+	normalizar_histograma(hr);
 	normalizar_histograma(e1);
 	normalizar_histograma(e2);
+
+	fred1   = uchar_to_float (red,   w*h);
+	fgreen1 = uchar_to_float (green, w*h);
+	fblue1  = uchar_to_float (blue,  w*h);
+	
+	
 	
 	/* Liberamos memoria y retornamos */
 	free (red); free (green); free (blue);

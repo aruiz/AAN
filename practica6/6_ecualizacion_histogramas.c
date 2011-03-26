@@ -97,7 +97,8 @@ main (int argc, char** argv)
 	              *red2, *green2, *blue2;
 
 	float *fred1, *fgreen1, *fblue1,
-          *fred2, *fgreen2, *fblue2;
+          *fred2, *fgreen2, *fblue2,
+          *fred3, *fgreen3, *fblue3;
 	
 	float *hr, *hg, *hb;
 	float *e1, *e2;
@@ -125,7 +126,7 @@ main (int argc, char** argv)
 	/* Normalizamos los histogramas */
 	normalizar_histograma(hr);
 	normalizar_histograma(hg);
-	normalizar_histograma(hr);
+	normalizar_histograma(hb);
 	normalizar_histograma(e1);
 	normalizar_histograma(e2);
 
@@ -151,8 +152,6 @@ main (int argc, char** argv)
 	red2   = float_to_uchar (fred2,   w*h);
 	green2 = float_to_uchar (fgreen2, w*h);
 	blue2  = float_to_uchar (fblue2,  w*h);
-	
-	ami_write_bmp ("salida.bmp", red2, green2, blue2, w, h);
 
 	/* Liberamos memoria */
 	free (red1); free (green1); free (blue1);

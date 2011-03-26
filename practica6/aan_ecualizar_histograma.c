@@ -16,13 +16,15 @@ aan_ecualizar_histograma(float *h, float *e, int *f)
 		 * h[0..i] se aproxima a e[0..k] */
 		for (i=0; i<256; i++)
 		{
+			/* Si hemos encontrado un valor aproximado abandonamos el bucle */
 			if ((sum_h + h[i]) > sum_e)
 				break;
+
 			sum_h = sum_h + h[i];
 		}
 		
-		/* Asignamos a f[k] la sumatoria resultante h[0..i] */
-		f[k] = (int)(sum_h * 255.0);
+		/* Asignamos a f[k] el valor i, donde se cumple que e[0..k] ~= h[0..i] */
+		f[k] = i-1;
 	}
 }
 

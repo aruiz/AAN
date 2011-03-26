@@ -51,16 +51,54 @@ normalizar_histograma (float* histograma)
 	}
 }
 
+float*
+generar_e1 ()
+{
+	int i;
+	float *e1 = (float*) malloc (sizeof(float) * 256);
+	for (i=0; i<256; i++)
+	{
+		e1[i] = 1.0/256.0;
+	}
+	return e1;
+}
+
+float*
+generar_e2 ()
+{
+	int i;
+	float *e2 = (float*) malloc (sizeof(float) * 256);
+	for (i=0; i<256; i++)
+	{
+		if (i<128)
+		{
+			/* Hayamos la ecuacion de la recta */
+			float m = ((1.0/128.0)-(1.0/512.0)) / (127.0 - 0.0);
+			float b = 1.0/512.0;
+			
+			e2[i] = m * i + b;
+		}
+		else
+		{
+			float m = ((1.0/512.0)-(1.0/128.0)) / (255.0 - 128.0);
+			float b = - (m * 128.0) + (1.0/128.0);
+			
+			e2[i] = m * i + b;
+		}
+	}
+	return e2;
+}
+
 int
 main (int argc, char** argv)
 {
 	int i, w, h;
 	unsigned char *red, *green, *blue;
 
+	float tmp = 0.0;
+
 	float *hr, *hg, *hb;
 	float *e1, *e2;
-
-	char salida[100];
 
 	if (argc < 2)
 	{
@@ -76,10 +114,15 @@ main (int argc, char** argv)
 	hg = generar_histograma (green, w, h);
 	hb = generar_histograma (blue,  w, h);
 	
-	for (i=0;i<256;i++)
-	{
-		fprintf (stderr, "red - %d - %f \n", i, hr[i]);
-	}
+	normalizar_histograma(hr);
+	normalizar_histograma(hg);
+	normalizar_histograma(hr);
+
+	e1 = generar_e1();
+	e2 = generar_e2();
+	
+	normalizar_histograma(e1);
+	normalizar_histograma(e2);
 	
 	/* Liberamos memoria y retornamos */
 	free (red); free (green); free (blue);

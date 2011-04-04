@@ -1,0 +1,4 @@
+make genera los ejecutables 7_propagacion_p1 y 7_propagacion_p2
+cada uno de estos ejecutables implementa cada enunciado de la practica.
+
+make video genera los videos p1/p1.avi y p2/p2.avi para cada enunciado

@@ -11,5 +11,5 @@ video: 7_propagacion_p1 7_propagacion_p2
 	cd p2 && make
 
 clean:
-	rm -rf 7_propagacion_p1
+	rm -rf 7_propagacion_p1 7_propagacion_p2
 	rm -rf */*avi */*bmp

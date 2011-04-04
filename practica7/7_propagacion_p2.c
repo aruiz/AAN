@@ -9,9 +9,9 @@
 #include "aan_propagacion.h"
 
 #define NITER 200
-#define DT    0.8
-#define K     0.9
-#define M     0.5
+#define DT    0.9
+#define K     1.0
+#define M     0.9
 
 void* gradiente_horizontal (float *input, int width, int height);
 void* gradiente_vertical (float *input, int width, int height);

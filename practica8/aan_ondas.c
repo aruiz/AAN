@@ -1,22 +1,17 @@
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
 #include "ami.h"
+#include "aan_mascara.h"
 
-/* Esta funcion */
 void
-aan_ecuacion_calor_fuerza_externa_metodo_explicito_una_iteracion (float  *canal_input,
-                                                                  float  *canal_output,
-                                                                  int     width,
-                                                                  int     height,
-                                                                  float   dt,
-                                                                  float   a,
-                                                                  float   t0,
-                                                                  float   t1,
-                                                                  float   t2)
+aan_ondas_un_canal (float *canal_input,
+                    float *canal_output,
+                    float *canal_anterior,
+                    int    width,
+                    int    height,
+                    float  dt)
 {
-	int i, j,
+  int i, j,
 	    k, l;
+  float   tmp;
 	float **area;
 	
 	/* Matriz para el area afectada por la mascara */
@@ -112,7 +107,7 @@ aan_ecuacion_calor_fuerza_externa_metodo_explicito_una_iteracion (float  *canal_
 				area[0][0] = canal_input[(width * j) + (i - 1 + 0)];
 				area[0][1] = canal_input[(width * j) + (i - 1 + 1)];
 				area[0][2] = canal_input[(width * j) + (i - 1 + 2)];
-	±			
+				
 				for (k=1; k < 3; k++)
 					for (l=0; l < 3; l++)
 						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];
@@ -135,51 +130,101 @@ aan_ecuacion_calor_fuerza_externa_metodo_explicito_una_iteracion (float  *canal_
 						area[k][l] = canal_input[width * (j - 1 + k) + (i - 1 + l)];
 			}
 
-			/* Hallamos el resultado y lo guardamos en el canal de salida */
-			canal_output[width * j + i] = area[1][1];
+      tmp = 0;
 
 			/* Recorremos todos los valores del area afectada*/
 			for (k=0; k < 3; k++)
 			{
 				for (l=0; l < 3; l++)
 				{
-					/* Hacemos la sumatoria de cada elemento */
-					/* Separamos el pixel central de los de al rededor */
-					if (l==1 && k==1)
-						canal_output[width * j + i] = canal_output[width * j + i] + ((dt/3.0) * (-8.0 * area[k][l]));
-					else
-						canal_output[width * j + i] = canal_output[width * j + i] + ((dt/3.0) * area[k][l]);
+            if (k == 1 && l == 1)
+  						tmp += -8 * area[1][1];
+            else
+              tmp += area[k][l];
 				}
 			}
 			
-			canal_output[width * j + i] = canal_output[width * j + i] - a*dt*(area[1][1] - t0)*(area[1][1] - t1)*(area[1][1] - t2);
+      canal_output[width * j + i] = 2 * area[1][1] - canal_anterior[width * j + i] + dt*dt*tmp;
+
+      if (canal_output[width * j + i] > 1.0)
+        canal_output[width * j + i] = 1.0;
+      else if (canal_output[width * j + i] < 0.0)
+        canal_output[width * j + i] = 0.0;
 		}
 	}
 
-	ami_free2d (area);
+	ami_free2d (area); 
 }
 
 void
-aan_ecuacion_calor_fuerza_externa_metodo_explicito (float  *canal_input,
-                                                    float  *canal_output,
-                                                    int     width,
-                                                    int     height,
-                                                    float   dt,
-                                                    int     niter,
-                                                    float   a,
-                                                    float   t0,
-                                                    float   t1,
-                                                    float   t2)
+aan_ecuacion_ondas_metodo_explícito(float *red_input,
+                                    float *green_input,
+                                    float *blue_input,
+                                    float *red_output,
+                                    float *green_output,
+                                    float *blue_output,
+                                    int    width,
+                                    int    height,
+                                    float dt,
+                                    int Niter)
 {
-	int i;
-	float *canal_tmp = (float*)malloc (sizeof(float) * width * height);
-	memcpy (canal_tmp, canal_input, sizeof(float) * width * height);
-	
-	for (i=0; i<niter; i++)
-	{
-		aan_ecuacion_calor_fuerza_externa_metodo_explicito_una_iteracion (canal_tmp, canal_output, width, height, dt, a, t0, t1, t2);	
-		memcpy (canal_tmp, canal_output, sizeof(float) * width * height);
-	}
-	
-	free (canal_tmp);
+  int i;
+
+  /* Canales auxiliares para la entrada de cada iteracion */
+  float *red   = (float*)malloc (sizeof(float) * width * height);
+  float *green = (float*)malloc (sizeof(float) * width * height);
+  float *blue  = (float*)malloc (sizeof(float) * width * height);
+
+  /* Canal de la iteracion anterior a la actual (input-1) */
+  float *red_anterior   = (float*)malloc (sizeof(float) * width * height);
+  float *green_anterior = (float*)malloc (sizeof(float) * width * height);
+  float *blue_anterior  = (float*)malloc (sizeof(float) * width * height);
+
+  aan_ondas_un_canal (entrada, salida, anterior, width, height, dt);
+
+  memcpy (red,   red_input,   sizeof(float) * width * height);
+  memcpy (green, green_input, sizeof(float) * width * height);
+  memcpy (blue,  blue_input,  sizeof(float) * width * height);
+
+  memcpy (red_anterior,   red_input,   sizeof(float) * width * height);
+  memcpy (green_anterior, green_input, sizeof(float) * width * height);
+  memcpy (blue_anterior,  blue_input,  sizeof(float) * width * height);
+
+
+  for (i=0; i<Niter; i++)
+  {
+    unsigned char *ured, *ugreen, *ublue;
+    char imagen[100];
+
+    /* Llevamos a cabo la iteracion para cada canal*/
+    aan_ondas_un_canal (red,   red_output,   red_anterior,   width, height, dt);
+    aan_ondas_un_canal (green, green_output, green_anterior, width, height, dt);
+    aan_ondas_un_canal (blue,  blue_output,  blue_anterior,  width, height, dt);
+
+    /* Copiamos el canal de entrada como canal anterior */
+    memcpy (red_anterior,   red_input,   sizeof(float) * width * height);
+    memcpy (green_anterior, green_input, sizeof(float) * width * height);
+    memcpy (blue_anterior,  blue_input,  sizeof(float) * width * height);
+
+    /* Guardamos el resultado en un fichero */
+		sprintf(imagen, "imagen_1%05d.bmp", i);
+    
+    ured   = float_to_uchar (red_output);
+    ugreen = float_to_uchar (green_output);
+    ublue  = float_to_uchar (blue_output);
+
+    ami_write_bmp (imagen, ured, ugreen, ublue, width, height);
+
+    free (ured); free (ugreen); free (ublue);
+
+    /* Copiamos el canal de salida a los canales de entrada para la
+     * siguiente iteracion */
+    memcpy (red,   red_output,   sizeof(float) * width * height);
+    memcpy (green, green_output, sizeof(float) * width * height);
+    memcpy (blue,  blue_output,  sizeof(float) * width * height);
+  }
+
+  /* Liberamos la memoria de los canales auxiliares */
+  free (red); free (green); free (blue);
+  free (red_anterior); free (green_anterior); free (blue_anterior);
 }

@@ -1,5 +1,12 @@
+#include <stdlib.h>
+#include <string.h>
+
+#include "aan_ondas.h"
+#include "float_utils.h"
+
+
+#include "ami_bmp.h"
 #include "ami.h"
-#include "aan_mascara.h"
 
 void
 aan_ondas_un_canal (float *canal_input,
@@ -138,13 +145,13 @@ aan_ondas_un_canal (float *canal_input,
 				for (l=0; l < 3; l++)
 				{
             if (k == 1 && l == 1)
-  						tmp += -8 * area[1][1];
+  						tmp = tmp + (-8.0 * area[1][1]);
             else
-              tmp += area[k][l];
+              tmp = tmp + area[k][l];
 				}
 			}
 			
-      canal_output[width * j + i] = 2 * area[1][1] - canal_anterior[width * j + i] + dt*dt*tmp;
+      canal_output[width * j + i] = 2.0 * area[1][1] - canal_anterior[width * j + i] + dt*dt*tmp;
 
       if (canal_output[width * j + i] > 1.0)
         canal_output[width * j + i] = 1.0;
@@ -157,7 +164,7 @@ aan_ondas_un_canal (float *canal_input,
 }
 
 void
-aan_ecuacion_ondas_metodo_explícito(float *red_input,
+aan_ecuacion_ondas_metodo_explicito(float *red_input,
                                     float *green_input,
                                     float *blue_input,
                                     float *red_output,
@@ -175,12 +182,10 @@ aan_ecuacion_ondas_metodo_explícito(float *red_input,
   float *green = (float*)malloc (sizeof(float) * width * height);
   float *blue  = (float*)malloc (sizeof(float) * width * height);
 
-  /* Canal de la iteracion anterior a la actual (input-1) */
+  /* Canal de la iteracion anterior a la actual (input-1) */ 
   float *red_anterior   = (float*)malloc (sizeof(float) * width * height);
   float *green_anterior = (float*)malloc (sizeof(float) * width * height);
   float *blue_anterior  = (float*)malloc (sizeof(float) * width * height);
-
-  aan_ondas_un_canal (entrada, salida, anterior, width, height, dt);
 
   memcpy (red,   red_input,   sizeof(float) * width * height);
   memcpy (green, green_input, sizeof(float) * width * height);
@@ -202,16 +207,16 @@ aan_ecuacion_ondas_metodo_explícito(float *red_input,
     aan_ondas_un_canal (blue,  blue_output,  blue_anterior,  width, height, dt);
 
     /* Copiamos el canal de entrada como canal anterior */
-    memcpy (red_anterior,   red_input,   sizeof(float) * width * height);
-    memcpy (green_anterior, green_input, sizeof(float) * width * height);
-    memcpy (blue_anterior,  blue_input,  sizeof(float) * width * height);
+    memcpy (red_anterior,   red,   sizeof(float) * width * height);
+    memcpy (green_anterior, green, sizeof(float) * width * height);
+    memcpy (blue_anterior,  blue,  sizeof(float) * width * height);
 
     /* Guardamos el resultado en un fichero */
 		sprintf(imagen, "imagen_1%05d.bmp", i);
     
-    ured   = float_to_uchar (red_output);
-    ugreen = float_to_uchar (green_output);
-    ublue  = float_to_uchar (blue_output);
+    ured   = float_to_uchar (red_output,   width*height);
+    ugreen = float_to_uchar (green_output, width*height);
+    ublue  = float_to_uchar (blue_output,  width*height);
 
     ami_write_bmp (imagen, ured, ugreen, ublue, width, height);
 

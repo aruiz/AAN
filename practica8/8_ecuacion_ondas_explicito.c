@@ -1,5 +1,8 @@
-#include "ami_bmp.h"
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "aan_ondas.h"
+#include "float_utils.h"
 
 int
 main (int argc, char **argv)
@@ -23,11 +26,11 @@ main (int argc, char **argv)
   fgreen2 = (float*)malloc (sizeof (float) * w * h);
   fblue2  = (float*)malloc (sizeof (float) * w * h);
 
-  fred   = uchar_to_float (red);
-  fgreen = uchar_to_float (green);
-  fblue  = uchar_to_float (blue);
+  fred   = uchar_to_float (red,   w*h);
+  fgreen = uchar_to_float (green, w*h);
+  fblue  = uchar_to_float (blue,  w*h);
 
-  aan_ecuacion_ondas_metodo_explícito(fred, fgreen, fblue,
+  aan_ecuacion_ondas_metodo_explicito(fred, fgreen, fblue,
                                       fred2, fgreen2, fblue2,
                                       w, h,
                                       0.1,

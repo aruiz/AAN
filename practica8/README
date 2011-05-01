@@ -1,0 +1,40 @@
+Compilar
+========
+Ejecutar 'make' y se compilara el programa:
+
+El programa implementa ambos enunciados de la practica y es el siguiente:
+
+- 8_ecuacion_ondas_explicito
+
+Uso del programa
+================
+Hay que ejecutarlo con un argumento en la linea de comandos que apunte a un
+fichero BMP valido, por ejemplo:
+
+ $ ./8_ecuacion_ondas_explicito nutella.bmp 
+
+El programa generara 1000 imagenes con los resultados para cada iteracion.
+
+Generar videos
+==============
+
+Ejecutar 'make videos' generara los videos para las sencuencias de las imagenes p1.bmp y nutella.bmp.
+
+Cada video sera generado dentro del directorio p1 y p2.
+
+Es necesario tener el programa 'mencoder' instalado.
+
+Fuentes
+=======
+
+Las fuentes de la implementacion de la funcion estan en estos ficheros:
+
+- aan_ondas.c
+- aan_ondas.h
+- 8_ecuacion_ondas_explicito.c
+
+Resultados
+==========
+
+Los videos conlos resultados pueden encontrarse en youtube:
+- 

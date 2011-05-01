@@ -18,7 +18,7 @@ El programa generara 1000 imagenes con los resultados para cada iteracion.
 Generar videos
 ==============
 
-Ejecutar 'make videos' generara los videos para las sencuencias de las imagenes p1.bmp y nutella.bmp.
+Ejecutar 'make video' generara los videos para las sencuencias de las imagenes p1.bmp y nutella.bmp.
 
 Cada video sera generado dentro del directorio p1 y p2.
 

@@ -1,9 +1,10 @@
-#include "aan_mascara.h"
-
-#include "ami.h"
-
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
+
+#include "float_utils.h"
+#include "aan_mascara.h"
+#include "ami.h"
 
 float*
 canal_a_k (float *input, int width, int height, float lambda)
@@ -327,15 +328,53 @@ aan_perona_malik (float *red_input,
 	float *green_m = canal_a_m (green_input, width, height, lambda);
 	float *blue_m  = canal_a_m (blue_input,  width, height, lambda);
 
+	float *red   = (float*) malloc (sizeof (float) * width * height);
+	float *green = (float*) malloc (sizeof (float) * width * height);
+	float *blue  = (float*) malloc (sizeof (float) * width * height);
+
+	memcpy (red,   red_input,   sizeof (float) *  width * height);
+	memcpy (green, green_input, sizeof (float) * width * height);
+	memcpy (blue,  blue_input,  sizeof (float) * width * height);
+
 	for (iter = 0; iter < Niters; iter++)
 	{
+		unsigned char *ured, *ugreen, *ublue;
+
+		char imagen[100];
 		for (i = 0; i < width; i++)
 			for (j = 0; j < height; j++)
 			{
 				int idx = width * j + i;
-				red_output [idx] = red_input [idx] + (dt * red_m[idx])/dh*dh*2;
-				green_output [idx] = green_input [idx] + (dt * green_m[idx])/dh*dh*2;
-				blue_output [idx] = blue_input [idx] + (dt * blue_m[idx])/dh*dh*2;
+
+				red_output [idx]   = red[idx]   + (dt * red_m[idx])  /dh*dh*2;
+				green_output [idx] = green[idx] + (dt * green_m[idx])/dh*dh*2;
+				blue_output [idx]  = blue[idx]  + (dt * blue_m[idx]) /dh*dh*2;
+
+				if (red_output[idx] < 0.0)
+					red_output[idx] = 0.0;
+				else if (red_output[idx] > 1.0)
+					red_output[idx] = 1.0;
+				if (green_output[idx] < 0.0)
+					green_output[idx] = 0.0;
+				else if (green_output[idx] > 1.0)
+					green_output[idx] = 1.0;
+				if (blue_output[idx] < 0.0)
+					blue_output[idx] = 0.0;
+				else if (blue_output[idx] > 1.0)
+					blue_output[idx] = 1.0;
 			}
+		/* Guardamos el canal en un fichero */
+		sprintf(imagen, "imagen_1%05d.bmp", iter);
+		ured   = float_to_uchar (red_output,   width * height);
+		ugreen = float_to_uchar (green_output, width * height);
+		ublue  = float_to_uchar (blue_output,  width * height);
+
+		ami_write_bmp (imagen, ured, ugreen, ublue, width, height);
+
+		free (ured); free (ugreen); free (ublue);
+		memcpy (red,   red_output,   sizeof (float) * width * height);
+		memcpy (green, green_output, sizeof (float) * width * height);
+		memcpy (blue,  blue_output,  sizeof (float) * width * height);
+
 	}
 }

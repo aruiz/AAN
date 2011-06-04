@@ -212,7 +212,7 @@ aan_ecuacion_ondas_metodo_explicito(float *red_input,
     memcpy (blue_anterior,  blue,  sizeof(float) * width * height);
 
     /* Guardamos el resultado en un fichero */
-		sprintf(imagen, "imagen_1%05d.bmp", i);
+    sprintf(imagen, "imagen_1%05d.bmp", i);
     
     ured   = float_to_uchar (red_output,   width*height);
     ugreen = float_to_uchar (green_output, width*height);

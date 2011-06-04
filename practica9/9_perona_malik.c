@@ -3,6 +3,7 @@
 
 #include "ami_bmp.h"
 #include "float_utils.h"
+#include "aan_perona_malik.h"
 
 int
 main (int argc, char **argv)
@@ -30,7 +31,10 @@ main (int argc, char **argv)
   fgreen = uchar_to_float (green, w*h);
   fblue  = uchar_to_float (blue,  w*h);
 
-  /////
+  aan_perona_malik (fred,  fgreen,  fblue,
+                    fred2, fgreen2, fblue2,
+                    w, h,
+                    0.5, 1.0, 0.01, 1000);
 
   /* Liberamos la memoria de los canales */
   free (fred); free (fgreen); free (fblue);

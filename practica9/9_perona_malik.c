@@ -34,7 +34,7 @@ main (int argc, char **argv)
   aan_perona_malik (fred,  fgreen,  fblue,
                     fred2, fgreen2, fblue2,
                     w, h,
-                    0.3, 1.0, 0.01, 1000);
+                    0.3, 1.0, 0.01, 100);
 
   /* Liberamos la memoria de los canales */
   free (fred); free (fgreen); free (fblue);

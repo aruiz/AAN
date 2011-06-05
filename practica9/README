@@ -1,0 +1,41 @@
+Compilar
+========
+Ejecutar 'make' y se compilaran los siguientes ejecutables uno por cada enunciado:
+
+- 9_perona_malik_p1
+- 9_perona_malik_p2
+- 9_perona_malik_p3
+
+Uso del programa
+================
+Hay que ejecutarlo con un argumento en la linea de comandos que apunte a un
+fichero BMP valido, por ejemplo:
+
+ $ ./9_perona_malik_p1 comida.bmp
+
+El programa generará 100 imagenes con los resultados para cada iteracion.
+
+Generar videos
+==============
+
+Ejecutar 'make videos' generara los videos para las sencuencias de las imagenes p1.bmp y comida.bmp.
+
+Cada video sera generado dentro del directorio p1, p2 y p3 en los ficheros p1.avi, p2.avi y p3.avi respectivamente
+
+Es necesario tener el programa 'mencoder' instalado.
+
+Fuentes
+=======
+
+Las fuentes de la implementacion de la funcion estan en estos ficheros:
+
+- aan_perona_malik.c
+- aan_perona_malik.h
+
+Resultados
+==========
+
+Los videos conlos resultados pueden encontrarse en youtube:
+http://www.youtube.com/watch?v=F7WZij-igbE
+http://www.youtube.com/watch?v=XkdZnNycC_4
+http://www.youtube.com/watch?v=k2lzJbrH-Ew

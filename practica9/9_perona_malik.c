@@ -5,6 +5,22 @@
 #include "float_utils.h"
 #include "aan_perona_malik.h"
 
+#define NITERS 100
+#define DT     0.3
+#define DH     1.0
+
+#ifdef P1
+#define LAMBDA 0.01
+#endif
+
+#ifdef P2
+#define LAMBDA 0.001
+#endif
+
+#ifdef P3
+#define LAMBDA 0.0001
+#endif
+
 int
 main (int argc, char **argv)
 {
@@ -34,7 +50,7 @@ main (int argc, char **argv)
   aan_perona_malik (fred,  fgreen,  fblue,
                     fred2, fgreen2, fblue2,
                     w, h,
-                    0.3, 1.0, 0.01, 100);
+                    DT, DH, LAMBDA, NITERS);
 
   /* Liberamos la memoria de los canales */
   free (fred); free (fgreen); free (fblue);

@@ -24,11 +24,6 @@ canal_a_k (float *input, int width, int height, float lambda)
 	for (i=0; i < width * height; i++)
 	{
 		output[i] = powf (M_E, output[i] * -lambda);
-
-		if (output[i] < 0.0)
-			output[i] = 0.0;
-		else if (output[i] > 1.0)
-			output[i] = 1.0;
 	}
 
 	ami_free2d (lap);
@@ -181,6 +176,7 @@ canal_a_m (float *canal_input, int width, int height, float lambda)
 	{
 		for (i=0; i < width; i++)
 		{
+			int     x, y;
 			float **grad;
 			/*Esquina superior izquierda */
 			if (i==0 && j==0)
@@ -293,9 +289,14 @@ canal_a_m (float *canal_input, int width, int height, float lambda)
 			grad = hallar_gradiente (canal_k, width, height, i, j);
 	
 			/* Aplicamos la mascara a este pixel y guardamos el resultado en la salida */
-			for (j=0; j < 3; j++)
-				for (i=0; i < 3; i++)
-					output[width + j + i] = output[width + j + i] + area[j][i] * grad[j][i];
+			for (y=0; y < 3; y++)
+				for (x=0; x < 3; x++)
+					output[width * j + i] = output[width * j + i] + (area[y][x] * grad[y][x]);
+
+			if (output[width * j + i] < 0.0)
+				output[width * j + i] = 0.0;
+			else if (output[width * j + i] > 1.0)
+				output[width * j + i] = 1.0;
 
 			ami_free2d (grad);
 		}
@@ -324,10 +325,6 @@ aan_perona_malik (float *red_input,
 {
 	int i, j, iter;
 
-	float *red_m   = canal_a_m (red_input,   width, height, lambda);
-	float *green_m = canal_a_m (green_input, width, height, lambda);
-	float *blue_m  = canal_a_m (blue_input,  width, height, lambda);
-
 	float *red   = (float*) malloc (sizeof (float) * width * height);
 	float *green = (float*) malloc (sizeof (float) * width * height);
 	float *blue  = (float*) malloc (sizeof (float) * width * height);
@@ -339,6 +336,9 @@ aan_perona_malik (float *red_input,
 	for (iter = 0; iter < Niters; iter++)
 	{
 		unsigned char *ured, *ugreen, *ublue;
+		float *red_m   = canal_a_m (red,   width, height, lambda);
+		float *green_m = canal_a_m (green, width, height, lambda);
+		float *blue_m  = canal_a_m (blue,  width, height, lambda);
 
 		char imagen[100];
 		for (i = 0; i < width; i++)
@@ -346,18 +346,20 @@ aan_perona_malik (float *red_input,
 			{
 				int idx = width * j + i;
 
-				red_output [idx]   = red[idx]   + (dt * red_m[idx])  /dh*dh*2;
-				green_output [idx] = green[idx] + (dt * green_m[idx])/dh*dh*2;
-				blue_output [idx]  = blue[idx]  + (dt * blue_m[idx]) /dh*dh*2;
+				red_output [idx]   = red[idx]   + (dt/(dh*dh*2)) * red_m[idx];
+				green_output [idx] = green[idx] + (dt/(dh*dh*2)) * green_m[idx];
+				blue_output [idx]  = blue[idx]  + (dt/(dh*dh*2)) * blue_m[idx];
 
 				if (red_output[idx] < 0.0)
 					red_output[idx] = 0.0;
 				else if (red_output[idx] > 1.0)
 					red_output[idx] = 1.0;
+
 				if (green_output[idx] < 0.0)
 					green_output[idx] = 0.0;
 				else if (green_output[idx] > 1.0)
 					green_output[idx] = 1.0;
+
 				if (blue_output[idx] < 0.0)
 					blue_output[idx] = 0.0;
 				else if (blue_output[idx] > 1.0)
@@ -365,6 +367,7 @@ aan_perona_malik (float *red_input,
 			}
 		/* Guardamos el canal en un fichero */
 		sprintf(imagen, "imagen_1%05d.bmp", iter);
+
 		ured   = float_to_uchar (red_output,   width * height);
 		ugreen = float_to_uchar (green_output, width * height);
 		ublue  = float_to_uchar (blue_output,  width * height);
@@ -372,6 +375,7 @@ aan_perona_malik (float *red_input,
 		ami_write_bmp (imagen, ured, ugreen, ublue, width, height);
 
 		free (ured); free (ugreen); free (ublue);
+		free (red_m); free (blue_m); free (green_m);
 		memcpy (red,   red_output,   sizeof (float) * width * height);
 		memcpy (green, green_output, sizeof (float) * width * height);
 		memcpy (blue,  blue_output,  sizeof (float) * width * height);

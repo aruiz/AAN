@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -55,7 +56,7 @@ stddev (float *input, int length, float avg)
   float sd = 0.0;
   
   for (i=0; i < length; i++)
-    sd = sd + (input[i] - avg);
+    sd = sd + (input[i] - avg)*(input[i] - avg);
     
   sd = sd / (float)length;
   sd = sqrtf (sd);
@@ -75,7 +76,7 @@ buscar_correlacion (float *vent,
                     int   *y)
 {
   float corr;
-  int i, j;
+  int i, j, k;
 
   float *area   = (float*)malloc (sizeof (float) * VENTANA * VENTANA);
   
@@ -92,6 +93,18 @@ buscar_correlacion (float *vent,
       
       media_area = media (area, VENTANA * VENTANA);
       stddev_area = stddev (area, VENTANA * VENTANA, media_area);
+      
+      sum = 0.0;
+      for (k=0; k<VENTANA*VENTANA; k++)
+      {
+        float tmp = (area[k] - media_area)*(vent[k] - media_ventana);
+        tmp = tmp / (stddev_area*stddev_ventana);
+        sum = sum + tmp;
+      }
+        
+      sum = sum / (VENTANA*VENTANA - 1);
+      
+      fprintf (stderr, "%d, %d : %f\n", i, j, stddev_area);
     }
   }
   

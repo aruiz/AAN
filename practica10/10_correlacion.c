@@ -87,6 +87,7 @@ main (int argc, char **argv)
   fgreen2 = uchar_to_float (green2, w2*h2);
   fblue2  = uchar_to_float (blue2,  w2*h2);
 
+/*
   fprintf (stderr, "Correlaciones verticales: rojo\n");
   fred_v  = aan_correlacion_vertical   (fred1, fred2, w1, h1);
   fprintf (stderr, "Correlaciones verticales: verde\n");
@@ -121,23 +122,23 @@ main (int argc, char **argv)
       fblue_h[i]  = fblue2[i];
     }
   }
- 
+ */
 
-  fred_resultado = unir_cuatro_imagenes (fred1, fred2, fred_v, fred_h, w1, h1);
-  fgreen_resultado = unir_cuatro_imagenes (fgreen1, fgreen2, fgreen_v, fgreen_h, w1, h1);
-  fblue_resultado = unir_cuatro_imagenes (fblue1, fblue2, fblue_v, fblue_h, w1, h1);
+  fred_resultado =   unir_cuatro_imagenes (fred1, fred2, fred1, fred1, w1, h1);
+  fgreen_resultado = unir_cuatro_imagenes (fgreen1, fgreen2, fgreen1, fgreen1, w1, h1);
+  fblue_resultado =  unir_cuatro_imagenes (fblue1, fblue2, fblue1, fblue1, w1, h1);
   
-  red_resultado = float_to_uchar (fred_resultado, w1 * h1); 
-  green_resultado = float_to_uchar (fgreen_resultado, w1 * h1);
-  blue_resultado = float_to_uchar (fblue_resultado, w1 * h1);
+  red_resultado =   float_to_uchar (fred_resultado,   w1*2 * h1*2); 
+  green_resultado = float_to_uchar (fgreen_resultado, w1*2 * h1*2);
+  blue_resultado =  float_to_uchar (fblue_resultado,  w1*2 * h1*2);
   
-	ami_write_bmp ("movimiento.bmp", red_resultado, green_resultado, blue_resultado, w1, h1);
+	ami_write_bmp ("movimiento.bmp", red_resultado, green_resultado, blue_resultado, w1*2, h1*2);
   
   /* Liberamos la memoria de los canales */
   free (fred1); free (fgreen1); free (fblue1);
   free (fred2); free (fgreen2); free (fblue2);
-  free (fred_v); free (fgreen_v); free (fblue_v);
-  free (fred_h); free (fgreen_h); free (fblue_h);
+/*  free (fred_v); free (fgreen_v); free (fblue_v);
+  free (fred_h); free (fgreen_h); free (fblue_h);*/
   free (red1);  free (green1);  free (blue1);
   free (red2);  free (green2);  free (blue2);
   return 0;

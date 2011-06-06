@@ -166,12 +166,10 @@ aan_correlacion (float *a, float *b, int width, int height, float *horizontal, f
       
       if ((j - y) != 0)
       {
-        fprintf (stderr, "vertical: %d - %d\n", i, x);
         vertical[y * width + x] = 1.0;
       }
       if ((i - x) != 0)
       {
-        fprintf (stderr, "horizontal: %d - %d\n", i, x);
         horizontal[y * width + x] = 1.0;
       }
     }

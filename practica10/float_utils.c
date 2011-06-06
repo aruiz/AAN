@@ -21,6 +21,9 @@ float_to_uchar (float *canal, size_t pixeles)
 	for (i=0; i<pixeles; i++)
 	{
 		/* Pasamos el valor a precision entera: (0.0-1.0) -> (0-255) */
+		float tmp = canal[i];
+    if (tmp < 0.0)
+      tmp = 0.0;
 		output[i] = (int)(canal[i] * 255.0);
 	}
 	return output;

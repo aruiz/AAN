@@ -3,10 +3,10 @@
 #include <math.h>
 
 /* La ventana siempre debe ser impar para que tenga un pixel central */
-#define VENTANA 7
+#define VENTANA 9
 
 /* Umbral de tolerancia para la correlacion */
-#define TOL 0.975
+#define TOL 0.90
 
 enum {
   COR_VERTICAL,
@@ -91,6 +91,9 @@ buscar_correlacion (float *vent,
     {
       float sum, media_area, stddev_area;
       
+      if (i == vent_i && j == vent_j)
+        continue;
+      
       copiar_ventana (input, area, width, height, i, j);
       
       media_area = media (area, VENTANA * VENTANA);
@@ -132,17 +135,17 @@ buscar_correlacion (float *vent,
   free (area);
 }
 
-float*
-aan_correlacion (float *a, float *b, int width, int height, int orientacion)
+void
+aan_correlacion (float *a, float *b, int width, int height, float *horizontal, float *vertical)
 {
   int i, j;
-  float *output = (float*)malloc (sizeof (float) * width * height);
   float *area   = (float*)malloc (sizeof (float) * VENTANA * VENTANA);
 
   for (i=0; i < width * height; i++)
   {
     /* Ponemos todos los valores de la salida a 0 */
-    output[i] = 0.0;
+    vertical[i] = 0.0;
+    horizontal[i] = 0.0;
   }
 
   /* Ignoramos los pixeles de los bordes por no poder llenar una ventana */
@@ -154,8 +157,6 @@ aan_correlacion (float *a, float *b, int width, int height, int orientacion)
       copiar_ventana (a, area, width, height, i, j);
       buscar_correlacion (area, b, width, height, i, j, &x, &y);
       
-      printf ("%d %d\n", i, j);
-      
       /* Si no hallamos correlacion continuamos */
       if (x == -1 || y == -1)
         continue;
@@ -163,25 +164,18 @@ aan_correlacion (float *a, float *b, int width, int height, int orientacion)
       if (x == i && y == j)
         continue;
       
-      if (orientacion == COR_VERTICAL && (j - y) != 0)
-        output[y * width + x] = b[y * width + x];
-      else if ((i - x) != 0)
-        output[y * width + x] = b[y * width + x];;
+      if ((j - y) != 0)
+      {
+        fprintf (stderr, "vertical: %d - %d\n", i, x);
+        vertical[y * width + x] = 1.0;
+      }
+      if ((i - x) != 0)
+      {
+        fprintf (stderr, "horizontal: %d - %d\n", i, x);
+        horizontal[y * width + x] = 1.0;
+      }
     }
   }
 
   free (area);
-  return output;
-}
-
-float*
-aan_correlacion_vertical (float *a, float *b, int width, int height)
-{
-  return aan_correlacion (a, b, width, height, COR_VERTICAL);
-}
-
-float*
-aan_correlacion_horizontal (float *a, float *b, int width, int height)
-{
-  return aan_correlacion (a, b, width, height, COR_HORIZONTAL);
 }

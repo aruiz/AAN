@@ -32,7 +32,7 @@ unir_cuatro_imagenes (float *a, float *b, float*c, float *d, int width, int heig
 			else
 			{
 				output[index] = b[width * j + i - width];
-				tmp[index]    = c[width * j + i - width];
+				tmp[index]    = d[width * j + i - width];
 		  }
 		}
 	}
@@ -70,7 +70,7 @@ main (int argc, char **argv)
   if (ami_read_bmp (argv[1], &red1, &green1, &blue1, &w1, &h1) < 0)
     return -1;
 
-  if (ami_read_bmp (argv[1], &red2, &green2, &blue2, &w2, &h2) < 0)
+  if (ami_read_bmp (argv[2], &red2, &green2, &blue2, &w2, &h2) < 0)
     return -2;
     
   if (w1 != w2 || h1 != h2)
@@ -86,21 +86,20 @@ main (int argc, char **argv)
   fred2   = uchar_to_float (red2,   w2*h2);
   fgreen2 = uchar_to_float (green2, w2*h2);
   fblue2  = uchar_to_float (blue2,  w2*h2);
+  
+  fred_v   = (float*)malloc(sizeof (float) * w1 * h1);
+  fgreen_v = (float*)malloc(sizeof (float) * w1 * h1);
+  fblue_v  = (float*)malloc(sizeof (float) * w1 * h1);
+  fred_h   = (float*)malloc(sizeof (float) * w1 * h1);
+  fgreen_h = (float*)malloc(sizeof (float) * w1 * h1);
+  fblue_h  = (float*)malloc(sizeof (float) * w1 * h1);
 
-/*
-  fprintf (stderr, "Correlaciones verticales: rojo\n");
-  fred_v  = aan_correlacion_vertical   (fred1, fred2, w1, h1);
-  fprintf (stderr, "Correlaciones verticales: verde\n");
-  fgreen_v  = aan_correlacion_vertical   (fgreen1, fgreen2, w1, h1);
-  fprintf (stderr, "Correlaciones verticales: azul\n");
-  fblue_v  = aan_correlacion_vertical   (fblue1, fblue2, w1, h1);
-
-  fprintf (stderr, "Correlaciones horizontales: azul\n");
-  fred_h  = aan_correlacion_horizontal (fred1, fred2, w1, h1);
-  fprintf (stderr, "Correlaciones horizontales: verde\n");
-  fgreen_h  = aan_correlacion_horizontal (fgreen1, fgreen2, w1, h1);
-  fprintf (stderr, "Correlaciones horizontales: azul\n");
-  fblue_h  = aan_correlacion_horizontal (fblue1, fblue2, w1, h1);
+  fprintf (stderr, "Correlaciones: rojo\n");
+  aan_correlacion   (fred1, fred2, w1, h1,   fred_v,   fred_h);
+  fprintf (stderr, "Correlaciones: verde\n");
+  aan_correlacion (fgreen1, fgreen2, w1, h1, fgreen_v, fgreen_h);
+  fprintf (stderr, "Correlaciones: azul\n");
+  aan_correlacion  (fblue1, fblue2, w1, h1,  fblue_v,  fgreen_h);
 
   for (i=0; i<w1*h1; i++)
   {
@@ -108,25 +107,25 @@ main (int argc, char **argv)
         fgreen_v[i] > 0.0 ||
         fblue_v[i]  > 0.0)
     {
-      fred_v[i]   = fred2[i];
-      fgreen_v[i] = fgreen2[i];
-      fblue_v[i]  = fblue2[i];
+      fred_v[i]   = 1.0;
+      fgreen_v[i] = 1.0;
+      fblue_v[i]  = 1.0;
     }
 
     if (fred_h[i]   > 0.0 ||
         fgreen_h[i] > 0.0 ||
         fblue_h[i]  > 0.0)
     {
-      fred_h[i]   = fred2[i];
-      fgreen_h[i] = fgreen2[i];
-      fblue_h[i]  = fblue2[i];
+      fred_h[i]   = 1.0;
+      fgreen_h[i] = 1.0;
+      fblue_h[i]  = 1.0;
     }
   }
- */
 
-  fred_resultado =   unir_cuatro_imagenes (fred1, fred2, fred1, fred1, w1, h1);
-  fgreen_resultado = unir_cuatro_imagenes (fgreen1, fgreen2, fgreen1, fgreen1, w1, h1);
-  fblue_resultado =  unir_cuatro_imagenes (fblue1, fblue2, fblue1, fblue1, w1, h1);
+
+  fred_resultado =   unir_cuatro_imagenes (fred1,   fred2,   fred_v,   fred_h,   w1, h1);
+  fgreen_resultado = unir_cuatro_imagenes (fgreen1, fgreen2, fgreen_v, fgreen_h, w1, h1);
+  fblue_resultado =  unir_cuatro_imagenes (fblue1,  fblue2,  fblue_v,  fblue_h,  w1, h1);
   
   red_resultado =   float_to_uchar (fred_resultado,   w1*2 * h1*2); 
   green_resultado = float_to_uchar (fgreen_resultado, w1*2 * h1*2);
@@ -137,8 +136,8 @@ main (int argc, char **argv)
   /* Liberamos la memoria de los canales */
   free (fred1); free (fgreen1); free (fblue1);
   free (fred2); free (fgreen2); free (fblue2);
-/*  free (fred_v); free (fgreen_v); free (fblue_v);
-  free (fred_h); free (fgreen_h); free (fblue_h);*/
+  free (fred_v); free (fgreen_v); free (fblue_v);
+  free (fred_h); free (fgreen_h); free (fblue_h);
   free (red1);  free (green1);  free (blue1);
   free (red2);  free (green2);  free (blue2);
   return 0;

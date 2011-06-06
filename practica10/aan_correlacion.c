@@ -3,10 +3,10 @@
 #include <math.h>
 
 /* La ventana siempre debe ser impar para que tenga un pixel central */
-#define VENTANA 5
+#define VENTANA 7
 
 /* Umbral de tolerancia para la correlacion */
-#define TOL 0.97
+#define TOL 0.975
 
 enum {
   COR_VERTICAL,
@@ -146,13 +146,15 @@ aan_correlacion (float *a, float *b, int width, int height, int orientacion)
   }
 
   /* Ignoramos los pixeles de los bordes por no poder llenar una ventana */
-  for (i = VENTANA / 2; i < (width - VENTANA / 2); i = i + 5)
+  for (i = VENTANA / 2; i < (width - VENTANA / 2); i++)
   {
-    for (j = VENTANA / 2; j < (height - VENTANA / 2); j = j + 5)
+    for (j = VENTANA / 2; j < (height - VENTANA / 2); j++)
     {
       int x = -1, y = -1;
       copiar_ventana (a, area, width, height, i, j);
       buscar_correlacion (area, b, width, height, i, j, &x, &y);
+      
+      printf ("%d %d\n", i, j);
       
       /* Si no hallamos correlacion continuamos */
       if (x == -1 || y == -1)

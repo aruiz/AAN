@@ -4,15 +4,19 @@
 #include "ami_bmp.h"
 #include "float_utils.h"
 
+#include "aan_correlacion.h"
+
 int
 main (int argc, char **argv)
 {
-  int            w, h;
+  int            w1, h1, w2, h2;
   unsigned char *red1, *green1, *blue1;
   unsigned char *red2, *green2, *blue2;
   float         *fred1, *fgreen1, *fblue1;
   float         *fred2, *fgreen2, *fblue2;
-  float         *fred_d, *fgreen_d, *fblue_d;
+
+  float         *fred_v, *fgreen_v, *fblue_v;
+  float         *fred_h, *fgreen_h, *fblue_h;
   
   if (argc < 3)
   {
@@ -21,25 +25,34 @@ main (int argc, char **argv)
   }
 
   /* Leemos los ficheros dados como argumentos */
-  if (ami_read_bmp (argv[1], &red1, &green1, &blue1, &w, &h) < 0)
+  if (ami_read_bmp (argv[1], &red1, &green1, &blue1, &w1, &h1) < 0)
     return -1;
 
-  if (ami_read_bmp (argv[1], &red2, &green2, &blue2, &w, &h) < 0)
-    return -1;
+  if (ami_read_bmp (argv[1], &red2, &green2, &blue2, &w2, &h2) < 0)
+    return -2;
+    
+  if (w1 != w2 || h1 != h2)
+  {
+    fprintf (stderr, "Las imagenes son de dimensiones distintas");
+    return -3;
+  }
 
-  fred1   = uchar_to_float (red1,   w*h);
-  fgreen1 = uchar_to_float (green1, w*h);
-  fblue1  = uchar_to_float (blue1,  w*h);
+  fred1   = uchar_to_float (red1,   w1*h1);
+  fgreen1 = uchar_to_float (green1, w1*h1);
+  fblue1  = uchar_to_float (blue1,  w1*h1);
 
-  fred2   = uchar_to_float (red2,   w*h);
-  fgreen2 = uchar_to_float (green2, w*h);
-  fblue2  = uchar_to_float (blue2,  w*h);
-  
-       
-  
+  fred2   = uchar_to_float (red2,   w2*h2);
+  fgreen2 = uchar_to_float (green2, w2*h2);
+  fblue2  = uchar_to_float (blue2,  w2*h2);
+
+  fred_v  = aan_correlacion_vertical (fred1, fred2, w1, h1);
+  fred_h  = aan_correlacion_horizontal (fred1, fred2, w1, h1);
+
   /* Liberamos la memoria de los canales */
   free (fred1); free (fgreen1); free (fblue1);
   free (fred2); free (fgreen2); free (fblue2);
+  free (fred_v); free (fgreen_v); free (fblue_v);
+  free (fred_h); free (fgreen_h); free (fblue_h);
   free (red1);  free (green1);  free (blue1);
   free (red2);  free (green2);  free (blue2);
   return 0;

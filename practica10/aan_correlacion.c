@@ -6,7 +6,7 @@
 #define VENTANA 5
 
 /* Umbral de tolerancia para la correlacion */
-#define TOL 0.95
+#define TOL 0.97
 
 enum {
   COR_VERTICAL,
@@ -72,10 +72,12 @@ buscar_correlacion (float *vent,
                     float *input,
                     int    width,
                     int    height,
+                    int    vent_i,
+                    int    vent_j,
                     int   *x,
                     int   *y)
 {
-  float corr;
+  float corr = -1.1;
   int i, j, k;
 
   float *area   = (float*)malloc (sizeof (float) * VENTANA * VENTANA);
@@ -104,7 +106,26 @@ buscar_correlacion (float *vent,
         
       sum = sum / (VENTANA*VENTANA - 1);
       
-      fprintf (stderr, "%d, %d : %f\n", i, j, stddev_area);
+      if (sum < TOL)
+        continue;
+
+      if (sum < corr)
+        continue;
+      
+      /* Calculamos ambas distancias */
+      if (sum == corr)
+      {
+        float ab = sqrtf ((float) ((vent_i - i)*(vent_i - i) + (vent_j - j)*(vent_j - j)));
+        float ac = sqrtf ((float) ((vent_i - *x)*(vent_i - *x) + (vent_j - *y)*(vent_j - *y)));
+        
+        /* Si la distancia del candidato es menor que la actual lo descartamos */
+        if (ac > ab)
+          continue;
+      }
+
+      corr = sum;
+      *x = i;
+      *y = j;
     }
   }
   
@@ -125,13 +146,25 @@ aan_correlacion (float *a, float *b, int width, int height, int orientacion)
   }
 
   /* Ignoramos los pixeles de los bordes por no poder llenar una ventana */
-  for (i = VENTANA / 2; i < (width - VENTANA / 2); i++)
+  for (i = VENTANA / 2; i < (width - VENTANA / 2); i = i + 5)
   {
-    for (j = VENTANA / 2; j < (height - VENTANA / 2); j++)
+    for (j = VENTANA / 2; j < (height - VENTANA / 2); j = j + 5)
     {
-      int x, y;
+      int x = -1, y = -1;
       copiar_ventana (a, area, width, height, i, j);
-      buscar_correlacion (area, b, width, height, &x, &y);
+      buscar_correlacion (area, b, width, height, i, j, &x, &y);
+      
+      /* Si no hallamos correlacion continuamos */
+      if (x == -1 || y == -1)
+        continue;
+      /* Si la correlacion nos devuelve el pixel original lo descartamos */
+      if (x == i && y == j)
+        continue;
+      
+      if (orientacion == COR_VERTICAL && (j - y) != 0)
+        output[y * width + x] = b[y * width + x];
+      else if ((i - x) != 0)
+        output[y * width + x] = b[y * width + x];;
     }
   }
 

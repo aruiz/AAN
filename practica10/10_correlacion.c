@@ -9,6 +9,7 @@
 int
 main (int argc, char **argv)
 {
+  int            i;
   int            w1, h1, w2, h2;
   unsigned char *red1, *green1, *blue1;
   unsigned char *red2, *green2, *blue2;
@@ -45,8 +46,38 @@ main (int argc, char **argv)
   fgreen2 = uchar_to_float (green2, w2*h2);
   fblue2  = uchar_to_float (blue2,  w2*h2);
 
-  fred_v  = aan_correlacion_vertical (fred1, fred2, w1, h1);
+  fred_v  = aan_correlacion_vertical   (fred1, fred2, w1, h1);
   fred_h  = aan_correlacion_horizontal (fred1, fred2, w1, h1);
+  fgreen_v  = aan_correlacion_vertical   (fgreen1, fgreen2, w1, h1);
+  fgreen_h  = aan_correlacion_horizontal (fgreen1, fgreen2, w1, h1);
+  fblue_v  = aan_correlacion_vertical   (fblue1, fblue2, w1, h1);
+  fblue_h  = aan_correlacion_horizontal (fblue1, fblue2, w1, h1);
+  
+  for (i=0; i<w1*h1; i++)
+  {
+    if (fred_v[i]   > 0.0 ||
+        fgreen_v[i] > 0.0 ||
+        fblue_v[i]  > 0.0)
+    {
+      fred_v[i]   = fred2[i];
+      fgreen_v[i] = fgreen2[i];
+      fblue_v[i]  = fblue2[i];
+    }
+    
+    if (fred_h[i]   > 0.0 ||
+        fgreen_h[i] > 0.0 ||
+        fblue_h[i]  > 0.0)
+    {
+      fred_h[i]   = fred2[i];
+      fgreen_h[i] = fgreen2[i];
+      fblue_h[i]  = fblue2[i];
+    }
+  }
+  
+	ami_write_bmp ("cosa.bmp", float_to_uchar (fred_h,   w1*h1),
+                             float_to_uchar (fgreen_h, w1*h1),
+                             float_to_uchar (fblue_h,  w1*h1),
+	                           w1, h1);
 
   /* Liberamos la memoria de los canales */
   free (fred1); free (fgreen1); free (fblue1);

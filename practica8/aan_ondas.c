@@ -88,9 +88,9 @@ aan_ondas_un_canal (float *canal_input,
 			/* Borde izquierdo (fuera de las esquinas) */
 			else if (i == 0)
 			{
-				area[0][0] = canal_input[(width * (j - 1 + k)) + i];
-				area[1][0] = canal_input[(width * (j - 1 + k)) + i];
-				area[2][0] = canal_input[(width * (j - 1 + k)) + i];
+				area[0][0] = canal_input[(width * (j - 1 + 0)) + i];
+				area[1][0] = canal_input[(width * (j - 1 + 1)) + i];
+				area[2][0] = canal_input[(width * (j - 1 + 2)) + i];
 				
 				for (k=0; k < 3; k++)
 					for (l=1; l < 3; l++)

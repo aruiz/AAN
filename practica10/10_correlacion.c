@@ -13,30 +13,50 @@ unir_cuatro_imagenes (float *a, float *b, float*c, float *d, int width, int heig
   float *output = (float*)malloc (sizeof (float) * (width * 2) * (height * 2));
   
   float *tmp = output + (width * 2)*height;
-  
-  	
-	for (i = 0; i < width*2; i++)
+
+  /* Primer cuadrante */
+	for (i = 0; i < width; i++)
 	{
 		for (j=0; j < height; j++)
 		{
-			/* Indice del pixel del canal de slida */
-			int index = (width*2) * j + i;
-			
-			/* Primer y tercer canal */
-			if (i<width)
-			{
-				output[index] = a[width * j + i];
-				tmp[index] = c[width * j + i];
-		  }
-			/* Segundo y cuarto canal */
-			else
-			{
-				output[index] = b[width * j + i - width];
-				tmp[index]    = d[width * j + i - width];
-		  }
+		    int index = (width*2)*j + i;
+		    
+		    output[index] = c[width*j + i];
 		}
-	}
+  }
   
+  /* Segundo cuadrante */
+	for (i = 0; i < width; i++)
+	{
+		for (j=0; j < height; j++)
+		{
+		    int index = (width*2)*j + i + width;
+		    
+		    output[index] = d[width*j + i];
+		}
+  }
+  
+  /* Tercer cuadrante */
+  for (i = 0; i < width; i++)
+	{
+		for (j=0; j < height; j++)
+		{
+		    int index = (height * width * 2) + (width*2)*j + i;
+		    
+		    output[index] = a[width*j + i];
+		}
+  }
+  
+  /* Cuarto cuadrante */
+  for (i = 0; i < width; i++)
+	{
+		for (j=0; j < height; j++)
+		{
+		    int index = (height * width * 2) + (width*2)*j + i + width;
+		    
+		    output[index] = b[width*j + i];
+		}
+  }
   return output;
 }
 
@@ -94,38 +114,11 @@ main (int argc, char **argv)
   fgreen_h = (float*)malloc(sizeof (float) * w1 * h1);
   fblue_h  = (float*)malloc(sizeof (float) * w1 * h1);
 
-  fprintf (stderr, "Correlaciones: rojo\n");
-  aan_correlacion   (fred1, fred2, w1, h1,   fred_v,   fred_h);
-  fprintf (stderr, "Correlaciones: verde\n");
-  aan_correlacion (fgreen1, fgreen2, w1, h1, fgreen_v, fgreen_h);
-  fprintf (stderr, "Correlaciones: azul\n");
-  aan_correlacion  (fblue1, fblue2, w1, h1,  fblue_v,  fgreen_h);
+  aan_correlacion   (fgreen1, fblue2, w1, h1,   fblue_v,   fblue_h);
 
-  for (i=0; i<w1*h1; i++)
-  {
-    if (fred_v[i]   > 0.0 ||
-        fgreen_v[i] > 0.0 ||
-        fblue_v[i]  > 0.0)
-    {
-      fred_v[i]   = 1.0;
-      fgreen_v[i] = 1.0;
-      fblue_v[i]  = 1.0;
-    }
-
-    if (fred_h[i]   > 0.0 ||
-        fgreen_h[i] > 0.0 ||
-        fblue_h[i]  > 0.0)
-    {
-      fred_h[i]   = 1.0;
-      fgreen_h[i] = 1.0;
-      fblue_h[i]  = 1.0;
-    }
-  }
-
-
-  fred_resultado =   unir_cuatro_imagenes (fred1,   fred2,   fred_v,   fred_h,   w1, h1);
-  fgreen_resultado = unir_cuatro_imagenes (fgreen1, fgreen2, fgreen_v, fgreen_h, w1, h1);
-  fblue_resultado =  unir_cuatro_imagenes (fblue1,  fblue2,  fblue_v,  fblue_h,  w1, h1);
+  fred_resultado =   unir_cuatro_imagenes (fred1,   fred2,   fblue_v, fblue_h,  w1, h1);
+  fgreen_resultado = unir_cuatro_imagenes (fgreen1, fgreen2, fblue_v, fblue_h,  w1, h1);
+  fblue_resultado =  unir_cuatro_imagenes (fblue1,  fblue2,  fblue_v, fblue_h,  w1, h1);
   
   red_resultado =   float_to_uchar (fred_resultado,   w1*2 * h1*2); 
   green_resultado = float_to_uchar (fgreen_resultado, w1*2 * h1*2);

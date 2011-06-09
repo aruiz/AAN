@@ -5,64 +5,27 @@
 #include "ami.h"
 #include "aan_mascara.h"
 
-void*
-gradiente_horizontal (float *input, int width, int height)
-{
-	float  *u_x;
-	float **mu_x;
 
-	u_x = (float*)malloc (sizeof(float) * width * height);
-	ami_malloc2d (mu_x, float, 3, 3);
-
-	/* Gradiente horizontal */
-	mu_x[0][0] = 0.25 * -(2.0 - sqrtf(2.0));     mu_x[0][1] = 0; mu_x[0][2] = 0.25 * (2.0 - sqrtf(2.0));
-	mu_x[1][0] = 0.25 * -2.0 * (sqrtf(2.0) - 1); mu_x[1][1] = 0; mu_x[1][2] = 0.25 * 2.0 * (sqrtf(2.0) - 1);
-	mu_x[2][0] = 0.25 * -(2.0 - sqrtf(2.0));     mu_x[2][1] = 0; mu_x[2][2] = 0.25 * (2.0 - sqrtf(2.0));
-
-	aan_mascara_canal (input, u_x, width, height, mu_x);
-
-	ami_free2d (mu_x);
-	return u_x;
-}
-
-void*
-gradiente_vertical (float *input, int width, int height)
-{
-	float  *u_y;
-	float **mu_y;
-
-	u_y = (float*)malloc (sizeof(float) * width * height);
-	ami_malloc2d (mu_y, float, 3, 3);
-	
-	/* Gradiente vertical */
-	mu_y[0][0] = 0.25 * - (2.0 - sqrtf(2.0)); mu_y[0][1] = 0.25 * -2.0 * (sqrtf(2.0) - 1); mu_y[0][2] = 0.25 * -(2.0-sqrtf(2.0));
-	mu_y[1][0] = 0;                           mu_y[1][1] = 0;                              mu_y[1][2] = 0;
-	mu_y[2][0] = 0.25 *   (2.0 - sqrtf(2.0)); mu_y[2][1] = 0.25 *  2.0 * (sqrtf(2.0) - 1); mu_y[2][2] = 0.25 *  (2.0 - sqrtf(2.0));
-
-	aan_mascara_canal (input, u_y, width, height, mu_y);
-
-	ami_free2d (mu_y);
-	return u_y;
-}
-
+/* Utilizamos una mascara laplaciana como aproximacion al modulo del gradiente */
 void*
 modgradiente (float *input, int width, int height)
 {
-	int i;
-	float *u_x = gradiente_horizontal (input, width, height);
-	float *u_y = gradiente_vertical   (input, width, height);
-	float *mod = (float*)malloc (sizeof(float) * width * height);
-	
-	for (i=0; i < (width * height); i++)
-	{
-			float potencia_u_x = powf (u_x[i], 2);
-			float potencia_u_y = powf (u_y[i], 2);
-			mod[i] = sqrtf (potencia_u_y + potencia_u_x);
-	}
-	
-	free (u_x); free (u_y);
+	float  *mod;
+	float **lap;
+
+	mod = (float*)malloc (sizeof(float) * width * height);
+	ami_malloc2d (lap, float, 3, 3);
+
+	lap[0][0] = 1.0; lap[0][1] =  1.0; lap[0][2] = 1.0;
+	lap[1][0] = 1.0; lap[1][1] = -8.0; lap[1][2] = 1.0;
+	lap[2][0] = 1.0; lap[2][1] =  1.0; lap[2][2] = 1.0;
+
+	aan_mascara_canal (input, mod, width, height, lap);
+
 	return mod;
 }
+
+
 
 void
 aan_propagacion_canal (float *input,

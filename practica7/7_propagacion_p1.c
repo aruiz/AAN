@@ -7,7 +7,7 @@
 #include "aan_propagacion.h"
 
 #define NITER 200
-#define DT    0.8
+#define DT    1.0
 #define K     0.9
 
 float*

@@ -9,12 +9,10 @@
 #include "aan_propagacion.h"
 
 #define NITER 200
-#define DT    0.9
-#define K     1.0
-#define M     0.9
+#define DT    1.0
+#define K     0.9
+#define M     0.3
 
-void* gradiente_horizontal (float *input, int width, int height);
-void* gradiente_vertical (float *input, int width, int height);
 void* modgradiente (float *input, int width, int height);
 
 float*
@@ -23,13 +21,13 @@ calcular_f_p2 (float *v, int width, int height, float k, float m)
 	int i, j;
 	float *f_p2 = (float*)malloc (sizeof(float) * width * height);
 	
-	float *grad = modgradiente (v, width, height);
+	float *mod = modgradiente (v, width, height);
 
 	for (i=0; i<height; i++)
 	{
 		for (j=0; j<width; j++)
 		{
-			float tmp = grad[i*width + j] / m;
+			float tmp = mod[i*width + j] / m;
 			
 			if (tmp > 1.0)
 				tmp = 1.0;
@@ -38,6 +36,7 @@ calcular_f_p2 (float *v, int width, int height, float k, float m)
 		}
 	}
 
+  free (mod);
 	return f_p2;
 }
 

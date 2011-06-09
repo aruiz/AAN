@@ -69,20 +69,27 @@ normalizar (float *input, int length)
   
   for (i=0; i<length; i++)
   {
-    if (input[0] > max)
-      max = input[0];
-    if (input[0] > min)
-      min = input[0];
+    if (input[i] > max)
+      max = input[i];
+    if (input[i] > min)
+      min = input[i];
   }
-  
+
+  /*Normalizamos centrando 0 a 0.5 para mantener 0.5 como nivel de gris*/
   for (i=0; i<length; i++)
   {
     float tmp;
     
-    tmp = input[0] - min;
-    input[0] = tmp / max;
-    
-    input[0] = 0.5 + input[0] - 0.5;
+    if (input[i] < 0.0)
+    {
+      tmp = input[i]/-min;
+      input[i] = tmp/2.0;
+    }
+    else
+    {
+      tmp = input[i]/max;
+      input[i] = 0.5 + tmp/2.0;
+    }
   }
 }
 
@@ -222,8 +229,8 @@ aan_correlacion (float *a, float *b, int width, int height, float *horizontal, f
   for (i=0; i < width * height; i++)
   {
     /* Ponemos todos los valores de la salida a 0 */
-    vertical[i] = 0.0;
-    horizontal[i] = 0.0;
+    vertical[i] = 0.5;
+    horizontal[i] = 0.5;
   }
   
   /* Laplaciano */
@@ -245,12 +252,9 @@ aan_correlacion (float *a, float *b, int width, int height, float *horizontal, f
       /* Si no hallamos correlacion continuamos */
       if (x == -1 || y == -1)
         continue;
-      /* Si la correlacion nos devuelve el pixel original lo descartamos */
-      if (x == i && y == j)
-        continue;
 
-      vertical[j*width + i] = x;
-      horizontal[j*width + i] = y;
+      vertical[j*width + i] = (float)x;
+      horizontal[j*width + i] = (float)y;
     }
   }
 

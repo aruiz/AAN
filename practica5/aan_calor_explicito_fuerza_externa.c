@@ -86,9 +86,9 @@ aan_ecuacion_calor_fuerza_externa_metodo_explicito_una_iteracion (float  *canal_
 			/* Borde izquierdo (fuera de las esquinas) */
 			else if (i == 0)
 			{
-				area[0][0] = canal_input[(width * (j - 1 + k)) + i];
-				area[1][0] = canal_input[(width * (j - 1 + k)) + i];
-				area[2][0] = canal_input[(width * (j - 1 + k)) + i];
+				area[0][0] = canal_input[(width * (j - 1 + 0)) + i];
+				area[1][0] = canal_input[(width * (j - 1 + 1)) + i];
+				area[2][0] = canal_input[(width * (j - 1 + 2)) + i];
 				
 				for (k=0; k < 3; k++)
 					for (l=1; l < 3; l++)
@@ -112,7 +112,7 @@ aan_ecuacion_calor_fuerza_externa_metodo_explicito_una_iteracion (float  *canal_
 				area[0][0] = canal_input[(width * j) + (i - 1 + 0)];
 				area[0][1] = canal_input[(width * j) + (i - 1 + 1)];
 				area[0][2] = canal_input[(width * j) + (i - 1 + 2)];
-	±			
+				
 				for (k=1; k < 3; k++)
 					for (l=0; l < 3; l++)
 						area[k][l] = canal_input[(width * (j - 1 + k)) + (i - 1 + l)];

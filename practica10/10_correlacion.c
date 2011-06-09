@@ -106,7 +106,7 @@ main (int argc, char **argv)
   fred2   = uchar_to_float (red2,   w2*h2);
   fgreen2 = uchar_to_float (green2, w2*h2);
   fblue2  = uchar_to_float (blue2,  w2*h2);
-  
+
   fred_v   = (float*)malloc(sizeof (float) * w1 * h1);
   fgreen_v = (float*)malloc(sizeof (float) * w1 * h1);
   fblue_v  = (float*)malloc(sizeof (float) * w1 * h1);
@@ -119,13 +119,13 @@ main (int argc, char **argv)
   fred_resultado =   unir_cuatro_imagenes (fred1,   fred2,   fblue_v, fblue_h,  w1, h1);
   fgreen_resultado = unir_cuatro_imagenes (fgreen1, fgreen2, fblue_v, fblue_h,  w1, h1);
   fblue_resultado =  unir_cuatro_imagenes (fblue1,  fblue2,  fblue_v, fblue_h,  w1, h1);
-  
+
   red_resultado =   float_to_uchar (fred_resultado,   w1*2 * h1*2); 
   green_resultado = float_to_uchar (fgreen_resultado, w1*2 * h1*2);
   blue_resultado =  float_to_uchar (fblue_resultado,  w1*2 * h1*2);
-  
+
 	ami_write_bmp ("movimiento.bmp", red_resultado, green_resultado, blue_resultado, w1*2, h1*2);
-  
+
   /* Liberamos la memoria de los canales */
   free (fred1); free (fgreen1); free (fblue1);
   free (fred2); free (fgreen2); free (fblue2);
@@ -133,5 +133,6 @@ main (int argc, char **argv)
   free (fred_h); free (fgreen_h); free (fblue_h);
   free (red1);  free (green1);  free (blue1);
   free (red2);  free (green2);  free (blue2);
+
   return 0;
 }
